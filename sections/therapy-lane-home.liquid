@@ -1,2007 +1,1605 @@
 {% liquid
-  assign standard = section.settings.standard_product
-  assign experienced = section.settings.experienced_product
+  assign standard_product = section.settings.standard_product
+  assign experienced_product = section.settings.experienced_product
 %}
 
-<section class="therapy-lane">
+<section class="therapy-lane" id="therapy-lane-{{ section.id }}">
 
-  <!-- ==========================================
+  <style>
+    #therapy-lane-{{ section.id }} {
+      --tl-green: #173330;
+      --tl-green-light: #234944;
+      --tl-sage: #8eafa2;
+      --tl-mint: #dcebe4;
+      --tl-cream: #faf8f1;
+      --tl-orange: #f2ad68;
+      --tl-white: #ffffff;
+      --tl-muted: #6d7d79;
+      --tl-line: rgba(23,51,48,.12);
+
+      background: var(--tl-cream);
+      color: var(--tl-green);
+      font-family: "DM Sans", sans-serif;
+      overflow: hidden;
+    }
+
+    #therapy-lane-{{ section.id }},
+    #therapy-lane-{{ section.id }} * {
+      box-sizing: border-box;
+    }
+
+    #therapy-lane-{{ section.id }} a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    #therapy-lane-{{ section.id }} button {
+      font: inherit;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-container {
+      width: min(1120px, calc(100% - 32px));
+      margin: auto;
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    #therapy-lane-{{ section.id }} .tl-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 20;
+      padding: 15px 0;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-nav {
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 8px 0 18px;
+
+      background: rgba(250,248,241,.78);
+      border: 1px solid rgba(255,255,255,.38);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+
+      border-radius: 100px;
+
+      box-shadow: 0 10px 30px rgba(23,51,48,.06);
+    }
+
+    #therapy-lane-{{ section.id }} .tl-logo {
+      font-family: "Manrope", sans-serif;
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-logo span {
+      color: #789c8c;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-nav-links {
+      display: none;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-nav-btn {
+      background: var(--tl-green);
+      color: white;
+      padding: 11px 16px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* =========================
        HERO
-  =========================================== -->
+    ========================= */
 
-  <div class="tl-hero">
+    #therapy-lane-{{ section.id }} .tl-hero {
+      position: relative;
+      min-height: 760px;
 
-    <div class="tl-hero-content">
+      display: flex;
+      align-items: center;
 
-      <div class="tl-label">
-        <span></span>
-        HUMAN-FIRST THERAPY
-      </div>
+      padding: 105px 0 45px;
 
-      <h1>
-        Screw AI,<br>
-        <i>Talk To a Human.</i>
-      </h1>
+      overflow: hidden;
 
-      <p class="tl-hero-text">
-        Real conversations with real therapists.
-        No bots. No algorithms pretending to understand you.
-      </p>
-
-      <div class="tl-hero-buttons">
-
-        {% if standard != blank %}
-          <a
-            href="#therapy-plans"
-            class="tl-btn tl-btn-primary"
-          >
-            Find Your Therapist
-            <span>↗</span>
-          </a>
+      background:
+        linear-gradient(
+          180deg,
+          rgba(23,51,48,.18),
+          rgba(23,51,48,.68)
+        ),
+        {% if section.settings.hero_image != blank %}
+          url("{{ section.settings.hero_image | image_url: width: 2400 }}")
+        {% else %}
+          url("https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=2000&q=88")
         {% endif %}
+        center center / cover no-repeat;
+    }
 
-        <a
-          href="#how-it-works"
-          class="tl-btn tl-btn-secondary"
-        >
-          How It Works
+    #therapy-lane-{{ section.id }} .tl-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+
+      background:
+        radial-gradient(
+          circle at 82% 18%,
+          rgba(242,173,104,.35),
+          transparent 27%
+        ),
+        radial-gradient(
+          circle at 10% 85%,
+          rgba(220,235,228,.25),
+          transparent 32%
+        );
+    }
+
+    #therapy-lane-{{ section.id }} .tl-hero-inner {
+      position: relative;
+      z-index: 2;
+      color: white;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-hero-content {
+      max-width: 760px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      padding: 8px 13px;
+
+      border: 1px solid rgba(255,255,255,.32);
+      background: rgba(255,255,255,.12);
+
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+
+      border-radius: 100px;
+
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.8px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-eyebrow i {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #b9d5c8;
+      box-shadow: 0 0 0 5px rgba(185,213,200,.15);
+    }
+
+    #therapy-lane-{{ section.id }} .tl-hero h1 {
+      margin: 24px 0;
+
+      font-family: "Manrope", sans-serif;
+      font-size: clamp(48px, 14vw, 92px);
+      font-weight: 800;
+      line-height: .98;
+      letter-spacing: -2px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-hero h1 span {
+      color: #d8ebe3;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-hero-copy {
+      max-width: 510px;
+
+      color: rgba(255,255,255,.82);
+
+      font-size: 15px;
+      line-height: 1.75;
+      letter-spacing: .25px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 27px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-btn {
+      min-height: 52px;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+
+      padding: 0 21px;
+
+      border-radius: 100px;
+
+      font-size: 13px;
+      font-weight: 700;
+
+      transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    #therapy-lane-{{ section.id }} .tl-btn-white {
+      background: white;
+      color: var(--tl-green);
+    }
+
+    #therapy-lane-{{ section.id }} .tl-btn-glass {
+      color: white;
+
+      background: rgba(255,255,255,.12);
+
+      border: 1px solid rgba(255,255,255,.3);
+
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    #therapy-lane-{{ section.id }} .tl-hero-note {
+      margin-top: 28px;
+
+      color: rgba(255,255,255,.65);
+
+      font-size: 11px;
+      letter-spacing: .35px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-floating-card {
+      display: none;
+
+      position: absolute;
+
+      right: 6%;
+      bottom: 8%;
+
+      width: 220px;
+
+      padding: 18px;
+
+      background: rgba(255,255,255,.9);
+      color: var(--tl-green);
+
+      border-radius: 22px;
+
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+
+      box-shadow: 0 20px 50px rgba(0,0,0,.18);
+    }
+
+    #therapy-lane-{{ section.id }} .tl-floating-card strong {
+      display: block;
+
+      font-family: "Manrope", sans-serif;
+      font-size: 20px;
+
+      letter-spacing: .3px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-floating-card small {
+      display: block;
+
+      margin-top: 6px;
+
+      color: var(--tl-muted);
+
+      font-size: 10px;
+      line-height: 1.55;
+    }
+
+    /* =========================
+       GENERAL HEADINGS
+    ========================= */
+
+    #therapy-lane-{{ section.id }} .tl-kicker {
+      color: #789c8c;
+
+      font-size: 10px;
+      font-weight: 800;
+
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-intro h2,
+    #therapy-lane-{{ section.id }} .tl-plans h2,
+    #therapy-lane-{{ section.id }} .tl-how h2,
+    #therapy-lane-{{ section.id }} .tl-faq h2 {
+      margin-top: 13px;
+
+      font-family: "Manrope", sans-serif;
+      font-size: clamp(35px, 9vw, 60px);
+      font-weight: 800;
+      line-height: 1.02;
+      letter-spacing: -1.1px;
+    }
+
+    /* =========================
+       INTRO
+    ========================= */
+
+    #therapy-lane-{{ section.id }} .tl-intro {
+      padding: 85px 0;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-intro h2 {
+      max-width: 720px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-intro h2 span {
+      color: #88a99c;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-intro-grid {
+      display: grid;
+      gap: 30px;
+      margin-top: 36px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-intro-copy {
+      max-width: 520px;
+
+      color: var(--tl-muted);
+
+      font-size: 15px;
+      line-height: 1.8;
+      letter-spacing: .15px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-mini-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-stat {
+      padding: 20px;
+
+      background: white;
+
+      border: 1px solid var(--tl-line);
+
+      border-radius: 20px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-stat b {
+      display: block;
+
+      font-family: "Manrope", sans-serif;
+      font-size: 27px;
+      font-weight: 800;
+
+      letter-spacing: .2px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-stat small {
+      color: var(--tl-muted);
+      font-size: 10px;
+    }
+
+    /* =========================
+       PLANS
+    ========================= */
+
+    #therapy-lane-{{ section.id }} .tl-plans {
+      padding: 10px 0 95px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-plans-head {
+      margin-bottom: 30px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-plans-head p {
+      max-width: 500px;
+
+      margin-top: 16px;
+
+      color: var(--tl-muted);
+
+      font-size: 13px;
+      line-height: 1.7;
+      letter-spacing: .15px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-product-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-product {
+      width: 100%;
+
+      min-height: 395px;
+
+      display: flex;
+      flex-direction: column;
+
+      padding: 25px;
+
+      background: white;
+
+      border: 1px solid var(--tl-line);
+      border-radius: 28px;
+
+      box-shadow: 0 15px 45px rgba(23,51,48,.05);
+
+      transition:
+        transform .3s ease,
+        box-shadow .3s ease;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-product:hover {
+      transform: translateY(-4px);
+
+      box-shadow: 0 24px 60px rgba(23,51,48,.09);
+    }
+
+    #therapy-lane-{{ section.id }} .tl-product.tl-dark {
+      background: var(--tl-green);
+      color: white;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-product-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-product-number {
+      font-size: 10px;
+      font-weight: 800;
+
+      text-transform: uppercase;
+      letter-spacing: 1.7px;
+
+      opacity: .55;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-badge {
+      padding: 6px 10px;
+
+      background: var(--tl-orange);
+      color: var(--tl-green);
+
+      border-radius: 100px;
+
+      font-size: 9px;
+      font-weight: 800;
+
+      text-transform: uppercase;
+      letter-spacing: .7px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-product h3 {
+      margin: 26px 0 10px;
+
+      font-family: "Manrope", sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+
+      line-height: 1.08;
+      letter-spacing: -.5px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-product p {
+      max-width: 320px;
+
+      color: var(--tl-muted);
+
+      font-size: 13px;
+      line-height: 1.7;
+      letter-spacing: .1px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-product.tl-dark p {
+      color: rgba(255,255,255,.64);
+    }
+
+    #therapy-lane-{{ section.id }} .tl-price {
+      margin-top: auto;
+
+      font-family: "Manrope", sans-serif;
+      font-size: 43px;
+      font-weight: 800;
+
+      letter-spacing: -1px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-price small {
+      font-family: "DM Sans", sans-serif;
+
+      font-size: 11px;
+      font-weight: 500;
+
+      letter-spacing: .1px;
+
+      opacity: .55;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-product-list {
+      display: grid;
+      gap: 9px;
+
+      margin: 18px 0 23px;
+
+      list-style: none;
+      padding: 0;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-product-list li {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      font-size: 11px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-check {
+      width: 17px;
+      height: 17px;
+
+      flex: none;
+
+      display: grid;
+      place-items: center;
+
+      background: var(--tl-mint);
+      color: var(--tl-green);
+
+      border-radius: 50%;
+
+      font-size: 9px;
+      font-weight: 900;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-product .tl-btn {
+      width: 100%;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-btn-dark {
+      background: var(--tl-green);
+      color: white;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-product.tl-dark .tl-btn-dark {
+      background: white;
+      color: var(--tl-green);
+    }
+
+    /* =========================
+       HOW IT WORKS
+    ========================= */
+
+    #therapy-lane-{{ section.id }} .tl-how {
+      padding: 85px 0;
+      background: var(--tl-mint);
+    }
+
+    #therapy-lane-{{ section.id }} .tl-steps {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-step {
+      min-height: 190px;
+
+      padding: 24px;
+
+      background: rgba(255,255,255,.68);
+
+      border: 1px solid rgba(23,51,48,.08);
+
+      border-radius: 24px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-step-number {
+      font-family: "Manrope", sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+
+      letter-spacing: 1px;
+
+      opacity: .4;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-step h3 {
+      margin: 35px 0 8px;
+
+      font-family: "Manrope", sans-serif;
+      font-size: 21px;
+      font-weight: 700;
+
+      letter-spacing: .1px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-step p {
+      color: var(--tl-muted);
+
+      font-size: 12px;
+      line-height: 1.75;
+    }
+
+    /* =========================
+       FAQ
+    ========================= */
+
+    #therapy-lane-{{ section.id }} .tl-faq {
+      padding: 85px 0;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-faq-list {
+      margin-top: 31px;
+      border-top: 1px solid var(--tl-line);
+    }
+
+    #therapy-lane-{{ section.id }} .tl-faq-item {
+      border-bottom: 1px solid var(--tl-line);
+    }
+
+    #therapy-lane-{{ section.id }} .tl-faq-q {
+      width: 100%;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 22px 0;
+
+      background: none;
+      border: 0;
+
+      color: var(--tl-green);
+
+      text-align: left;
+
+      font-size: 14px;
+      font-weight: 700;
+
+      letter-spacing: .15px;
+
+      cursor: pointer;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-plus {
+      font-size: 21px;
+      font-weight: 400;
+
+      transition: .25s;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-faq-a {
+      max-height: 0;
+      overflow: hidden;
+
+      color: var(--tl-muted);
+
+      font-size: 12px;
+      line-height: 1.75;
+
+      transition:
+        max-height .3s ease,
+        padding .3s ease;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-faq-item.open .tl-faq-a {
+      max-height: 150px;
+      padding-bottom: 21px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-faq-item.open .tl-plus {
+      transform: rotate(45deg);
+    }
+
+    /* =========================
+       FINAL CTA
+    ========================= */
+
+    #therapy-lane-{{ section.id }} .tl-final {
+      margin: 0 16px 16px;
+
+      padding: 68px 22px;
+
+      background:
+        radial-gradient(
+          circle at 85% 15%,
+          rgba(142,175,162,.72),
+          transparent 25%
+        ),
+        radial-gradient(
+          circle at 10% 100%,
+          rgba(242,173,104,.65),
+          transparent 26%
+        ),
+        var(--tl-green);
+
+      color: white;
+
+      border-radius: 32px;
+
+      text-align: center;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-final h2 {
+      max-width: 720px;
+
+      margin: auto;
+
+      font-family: "Manrope", sans-serif;
+      font-size: clamp(37px,10vw,64px);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -.8px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-final p {
+      max-width: 440px;
+
+      margin: 17px auto 0;
+
+      color: rgba(255,255,255,.64);
+
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-final .tl-btn {
+      margin-top: 26px;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    #therapy-lane-{{ section.id }} .tl-footer {
+      padding: 36px 16px;
+      text-align: center;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-footer-logo {
+      font-family: "Manrope", sans-serif;
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: .2px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-footer-logo span {
+      color: #789c8c;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-footer p {
+      margin-top: 8px;
+
+      color: var(--tl-muted);
+
+      font-size: 10px;
+    }
+
+    #therapy-lane-{{ section.id }} .tl-footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 21px;
+
+      margin-top: 18px;
+
+      color: var(--tl-muted);
+
+      font-size: 10px;
+    }
+
+    /* =========================
+       DESKTOP
+    ========================= */
+
+    @media (min-width: 760px) {
+
+      #therapy-lane-{{ section.id }} .tl-container {
+        width: min(1120px, calc(100% - 60px));
+      }
+
+      #therapy-lane-{{ section.id }} .tl-header {
+        padding-top: 22px;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-nav {
+        height: 64px;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-nav-links {
+        display: flex;
+
+        gap: 30px;
+
+        margin-left: auto;
+        margin-right: 30px;
+
+        color: var(--tl-muted);
+
+        font-size: 12px;
+        font-weight: 600;
+
+        letter-spacing: .15px;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-hero {
+        min-height: 820px;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-hero-content {
+        max-width: 790px;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-floating-card {
+        display: block;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-intro {
+        padding: 110px 0;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-intro-grid {
+        grid-template-columns: 1fr .75fr;
+        align-items: end;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-product-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-product {
+        min-height: 420px;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-how {
+        padding: 110px 0;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-steps {
+        grid-template-columns: repeat(3,1fr);
+      }
+
+      #therapy-lane-{{ section.id }} .tl-step {
+        min-height: 225px;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-faq {
+        padding: 110px 0;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-final {
+        margin: 0 30px 30px;
+        padding: 105px 30px;
+        border-radius: 42px;
+      }
+    }
+
+    @media (min-width: 1050px) {
+
+      #therapy-lane-{{ section.id }} .tl-hero {
+        min-height: 850px;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-hero h1 {
+        font-size: 88px;
+        letter-spacing: -1.5px;
+      }
+    }
+
+    @media (max-width: 390px) {
+
+      #therapy-lane-{{ section.id }} .tl-container {
+        width: calc(100% - 24px);
+      }
+
+      #therapy-lane-{{ section.id }} .tl-nav {
+        padding-left: 14px;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-logo {
+        font-size: 17px;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-nav-btn {
+        padding: 10px 13px;
+        font-size: 11px;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-hero {
+        min-height: 720px;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-hero h1 {
+        font-size: 47px;
+        letter-spacing: -1.3px;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-hero-actions {
+        flex-direction: column;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-hero-actions .tl-btn {
+        width: 100%;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-product {
+        padding: 22px;
+        border-radius: 25px;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-product h3 {
+        font-size: 25px;
+      }
+
+      #therapy-lane-{{ section.id }} .tl-price {
+        font-size: 39px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #therapy-lane-{{ section.id }} *,
+      #therapy-lane-{{ section.id }} *::before,
+      #therapy-lane-{{ section.id }} *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+  </style>
+
+  <!-- HEADER -->
+
+  <header class="tl-header">
+    <div class="tl-container">
+
+      <nav class="tl-nav">
+
+        <a href="{{ routes.root_url }}" class="tl-logo">
+          therapy<span>lane</span>
         </a>
 
-      </div>
-
-      <div class="tl-trust">
-
-        <div class="tl-mini-avatars">
-          <span>H</span>
-          <span>T</span>
-          <span>+</span>
+        <div class="tl-nav-links">
+          <a href="#tl-plans-{{ section.id }}">Therapists</a>
+          <a href="#tl-how-{{ section.id }}">How it works</a>
+          <a href="#tl-faq-{{ section.id }}">FAQ</a>
         </div>
 
-        <div>
-          <strong>Someone real is listening.</strong>
-          <small>Private · Personal · Human</small>
+        <a href="#tl-plans-{{ section.id }}" class="tl-nav-btn">
+          Find your therapist
+        </a>
+
+      </nav>
+
+    </div>
+  </header>
+
+
+  <!-- HERO -->
+
+  <section class="tl-hero">
+
+    <div class="tl-container tl-hero-inner">
+
+      <div class="tl-hero-content">
+
+        <div class="tl-eyebrow">
+          <i></i>
+          Human-first therapy
         </div>
+
+        <h1>
+          Screw AI.<br>
+          <span>Talk to a human.</span>
+        </h1>
+
+        <p class="tl-hero-copy">
+          Real therapists. Accessible prices. No bots.
+          Talk to someone qualified, present,
+          and genuinely human.
+        </p>
+
+        <div class="tl-hero-actions">
+
+          <a
+            href="#tl-plans-{{ section.id }}"
+            class="tl-btn tl-btn-white"
+          >
+            Meet your therapist ↗
+          </a>
+
+          <a
+            href="#tl-how-{{ section.id }}"
+            class="tl-btn tl-btn-glass"
+          >
+            How it works
+          </a>
+
+        </div>
+
+        <p class="tl-hero-note">
+          Private conversations · Human therapists · No AI therapy
+        </p>
 
       </div>
 
     </div>
 
+    <div class="tl-floating-card">
+      <strong>100% human.</strong>
+      <small>
+        No bots. No automated therapy.
+        Just an actual person listening.
+      </small>
+    </div>
 
-    <!-- HERO VISUAL -->
+  </section>
 
-    <div class="tl-hero-visual">
 
-      <div class="tl-circle tl-circle-one"></div>
-      <div class="tl-circle tl-circle-two"></div>
+  <!-- INTRO -->
 
-      <div class="tl-therapy-card">
+  <section class="tl-intro">
 
-        <div class="tl-card-status">
-          <span></span>
-          THERAPIST AVAILABLE
-        </div>
+    <div class="tl-container">
 
-        <div class="tl-profile">
+      <div class="tl-kicker">
+        Therapy, without the weirdness
+      </div>
 
-          <div class="tl-profile-icon">
-            ✦
+      <h2>
+        You don't need another
+        <span>algorithm.</span>
+      </h2>
+
+      <div class="tl-intro-grid">
+
+        <p class="tl-intro-copy">
+          Therapy Lane keeps things simple:
+          talk to a real therapist, at a transparent
+          price, without an AI pretending to understand
+          what you're going through.
+        </p>
+
+        <div class="tl-mini-stats">
+
+          <div class="tl-stat">
+            <b>100%</b>
+            <small>Human therapists</small>
           </div>
 
-          <div>
-            <strong>Your therapist</strong>
-            <small>Here to listen.</small>
+          <div class="tl-stat">
+            <b>1:1</b>
+            <small>Private sessions</small>
           </div>
 
         </div>
 
-        <div class="tl-quote">
-
-          <span>“</span>
-
-          You don't have to
-          figure everything
-          out alone.
-
-        </div>
-
-        <div class="tl-card-divider"></div>
-
-        <div class="tl-card-info">
-
-          <span>Private session</span>
-          <span>45 min</span>
-
-        </div>
-
-      </div>
-
-
-      <div class="tl-floating-card tl-floating-one">
-        <span>♥</span>
-        Human support
-      </div>
-
-      <div class="tl-floating-card tl-floating-two">
-        <span>✓</span>
-        No AI
       </div>
 
     </div>
 
-  </div>
+  </section>
 
 
-  <!-- ==========================================
-       WHY THERAPY LANE
-  =========================================== -->
+  <!-- PLANS -->
 
-  <div class="tl-benefits">
-
-    <div class="tl-benefit">
-
-      <small>01</small>
-
-      <h3>Real humans</h3>
-
-      <p>
-        Talk with a real therapist,
-        not an AI chatbot.
-      </p>
-
-    </div>
-
-
-    <div class="tl-benefit">
-
-      <small>02</small>
-
-      <h3>Private conversations</h3>
-
-      <p>
-        Your thoughts deserve a
-        private and respectful space.
-      </p>
-
-    </div>
-
-
-    <div class="tl-benefit">
-
-      <small>03</small>
-
-      <h3>Simple therapy</h3>
-
-      <p>
-        Choose your therapist level
-        and take the first step.
-      </p>
-
-    </div>
-
-  </div>
-
-
-  <!-- ==========================================
-       PLANS
-  =========================================== -->
-
-  <div
+  <section
     class="tl-plans"
-    id="therapy-plans"
+    id="tl-plans-{{ section.id }}"
   >
 
-    <div class="tl-section-heading">
+    <div class="tl-container">
 
-      <div class="tl-label">
-        <span></span>
-        CHOOSE YOUR THERAPIST
+      <div class="tl-plans-head">
+
+        <div class="tl-kicker">
+          Choose your therapist
+        </div>
+
+        <h2>
+          Two options.<br>
+          One human connection.
+        </h2>
+
+        <p>
+          Therapy Lane keeps the choice simple:
+          two therapist experience levels,
+          transparent pricing, and no AI
+          pretending to be your therapist.
+        </p>
+
       </div>
 
-      <h2>
-        Two ways to start
-        <i>talking.</i>
-      </h2>
 
-      <p>
-        Choose the level of experience
-        that feels right for you.
-      </p>
-
-    </div>
+      <div class="tl-product-grid">
 
 
-    <div class="tl-plan-grid">
+        <!-- STANDARD -->
 
+        <article class="tl-product">
 
-      <!-- STANDARD -->
+          <div class="tl-product-top">
 
-      {% if standard != blank %}
+            <span class="tl-product-number">
+              01 · Standard
+            </span>
 
-        <article class="tl-plan">
-
-          <div class="tl-plan-number">
-            01
-          </div>
-
-          <div class="tl-plan-type">
-            STANDARD THERAPIST
           </div>
 
           <h3>
-            Someone to talk to.
+            Standard Therapist
           </h3>
 
           <p>
-            A real therapist who gives you
-            space to talk, reflect and be heard.
+            A qualified therapist for supportive
+            conversations, personal growth,
+            and everyday mental wellbeing.
           </p>
 
           <div class="tl-price">
 
-            <span>$</span>
+            {% if standard_product != blank %}
+              {{ standard_product.price | money }}
+            {% else %}
+              $75
+            {% endif %}
 
-            {{ standard.price
-              | money_without_trailing_zeros
-              | remove: '$'
-            }}
-
-          </div>
-
-          <div class="tl-plan-details">
-
-            <div>
-              <span>✓</span>
-              Human therapist
-            </div>
-
-            <div>
-              <span>✓</span>
-              Private session
-            </div>
-
-            <div>
-              <span>✓</span>
-              45 minutes
-            </div>
-
-            <div>
-              <span>✓</span>
-              No AI
-            </div>
+            <small>
+              / session
+            </small>
 
           </div>
 
+          <ul class="tl-product-list">
 
-          <form
-            method="post"
-            action="{{ routes.cart_add_url }}"
-          >
+            <li>
+              <span class="tl-check">✓</span>
+              Qualified therapist
+            </li>
 
-            <input
-              type="hidden"
-              name="id"
-              value="{{ standard.selected_or_first_available_variant.id }}"
+            <li>
+              <span class="tl-check">✓</span>
+              Private 1:1 session
+            </li>
+
+            <li>
+              <span class="tl-check">✓</span>
+              Human support
+            </li>
+
+          </ul>
+
+          {% if standard_product != blank %}
+
+            <a
+              href="{{ standard_product.url }}"
+              class="tl-btn tl-btn-dark"
             >
+              Choose Standard ↗
+            </a>
 
-            <button
-              type="submit"
-              class="tl-plan-button"
+          {% else %}
+
+            <a
+              href="#"
+              class="tl-btn tl-btn-dark"
             >
+              Choose Standard ↗
+            </a>
 
-              Choose Standard
-
-              <span>→</span>
-
-            </button>
-
-          </form>
+          {% endif %}
 
         </article>
 
-      {% endif %}
 
+        <!-- EXPERIENCED -->
 
+        <article class="tl-product tl-dark">
 
-      <!-- HIGHLY EXPERIENCED -->
+          <div class="tl-product-top">
 
-      {% if experienced != blank %}
+            <span class="tl-product-number">
+              02 · Experienced
+            </span>
 
-        <article class="tl-plan tl-plan-featured">
+            <span class="tl-badge">
+              Premium
+            </span>
 
-          <div class="tl-popular">
-            RECOMMENDED
-          </div>
-
-          <div class="tl-plan-number">
-            02
-          </div>
-
-          <div class="tl-plan-type">
-            HIGHLY EXPERIENCED
           </div>
 
           <h3>
-            Go deeper.
+            Highly Experienced Therapist
           </h3>
 
           <p>
-            Work with a highly experienced
-            therapist for deeper support.
+            A seasoned therapist for clients
+            looking for deeper perspective
+            and extensive professional experience.
           </p>
 
           <div class="tl-price">
 
-            <span>$</span>
+            {% if experienced_product != blank %}
+              {{ experienced_product.price | money }}
+            {% else %}
+              $115
+            {% endif %}
 
-            {{ experienced.price
-              | money_without_trailing_zeros
-              | remove: '$'
-            }}
+            <small>
+              / session
+            </small>
 
           </div>
 
-          <div class="tl-plan-details">
+          <ul class="tl-product-list">
 
-            <div>
-              <span>✓</span>
+            <li>
+              <span class="tl-check">✓</span>
               Highly experienced therapist
-            </div>
+            </li>
 
-            <div>
-              <span>✓</span>
-              Private session
-            </div>
+            <li>
+              <span class="tl-check">✓</span>
+              Private 1:1 session
+            </li>
 
-            <div>
-              <span>✓</span>
-              45 minutes
-            </div>
+            <li>
+              <span class="tl-check">✓</span>
+              Human support
+            </li>
 
-            <div>
-              <span>✓</span>
-              No AI
-            </div>
+          </ul>
 
-          </div>
+          {% if experienced_product != blank %}
 
-
-          <form
-            method="post"
-            action="{{ routes.cart_add_url }}"
-          >
-
-            <input
-              type="hidden"
-              name="id"
-              value="{{ experienced.selected_or_first_available_variant.id }}"
+            <a
+              href="{{ experienced_product.url }}"
+              class="tl-btn tl-btn-dark"
             >
+              Choose Experienced ↗
+            </a>
 
-            <button
-              type="submit"
-              class="tl-plan-button tl-plan-button-dark"
+          {% else %}
+
+            <a
+              href="#"
+              class="tl-btn tl-btn-dark"
             >
+              Choose Experienced ↗
+            </a>
 
-              Choose Experienced
-
-              <span>→</span>
-
-            </button>
-
-          </form>
+          {% endif %}
 
         </article>
 
-      {% endif %}
+      </div>
 
     </div>
 
-  </div>
+  </section>
 
 
+  <!-- HOW IT WORKS -->
 
-  <!-- ==========================================
-       HOW IT WORKS
-  =========================================== -->
-
-  <div
+  <section
     class="tl-how"
-    id="how-it-works"
+    id="tl-how-{{ section.id }}"
   >
 
-    <div class="tl-section-heading tl-center">
+    <div class="tl-container">
 
-      <div class="tl-label">
-        <span></span>
-        HOW IT WORKS
+      <div class="tl-kicker">
+        Simple by design
       </div>
 
       <h2>
-        Less scrolling.<br>
-        More <i>talking.</i>
+        Three steps.<br>
+        No weirdness.
       </h2>
 
-    </div>
+      <div class="tl-steps">
 
+        <article class="tl-step">
 
-    <div class="tl-steps">
+          <span class="tl-step-number">
+            01
+          </span>
 
-      <div class="tl-step">
-
-        <span>01</span>
-
-        <div>
-          <h3>Choose your therapist</h3>
+          <h3>
+            Choose a human
+          </h3>
 
           <p>
-            Pick the experience level
+            Pick the therapist experience level
             that feels right for you.
           </p>
-        </div>
+
+        </article>
+
+
+        <article class="tl-step">
+
+          <span class="tl-step-number">
+            02
+          </span>
+
+          <h3>
+            Book your session
+          </h3>
+
+          <p>
+            Choose a time that works without
+            navigating a complicated process.
+          </p>
+
+        </article>
+
+
+        <article class="tl-step">
+
+          <span class="tl-step-number">
+            03
+          </span>
+
+          <h3>
+            Start talking
+          </h3>
+
+          <p>
+            Show up as yourself.
+            Your therapist is there to listen.
+          </p>
+
+        </article>
 
       </div>
 
+    </div>
 
-      <div class="tl-step">
+  </section>
 
-        <span>02</span>
 
-        <div>
-          <h3>Place your order</h3>
+  <!-- FAQ -->
 
-          <p>
-            Select your session and
-            complete your secure checkout.
-          </p>
-        </div>
+  <section
+    class="tl-faq"
+    id="tl-faq-{{ section.id }}"
+  >
 
+    <div class="tl-container">
+
+      <div class="tl-kicker">
+        Questions
       </div>
 
+      <h2>
+        No fine-print energy.
+      </h2>
 
-      <div class="tl-step">
+      <div class="tl-faq-list">
 
-        <span>03</span>
 
-        <div>
-          <h3>Talk to a human</h3>
+        <div class="tl-faq-item">
 
-          <p>
-            Have a real conversation
-            with someone who listens.
-          </p>
+          <button
+            type="button"
+            class="tl-faq-q"
+          >
+            <span>Are the therapists real people?</span>
+            <span class="tl-plus">+</span>
+          </button>
+
+          <div class="tl-faq-a">
+            Yes. Therapy Lane is built around
+            real human therapists.
+            There are no AI therapists
+            pretending to provide therapy.
+          </div>
+
+        </div>
+
+
+        <div class="tl-faq-item">
+
+          <button
+            type="button"
+            class="tl-faq-q"
+          >
+            <span>What's the difference between the two options?</span>
+            <span class="tl-plus">+</span>
+          </button>
+
+          <div class="tl-faq-a">
+            The main difference is therapist
+            experience. Standard Therapist is
+            the accessible option, while Highly
+            Experienced Therapist gives you access
+            to a more seasoned professional.
+          </div>
+
+        </div>
+
+
+        <div class="tl-faq-item">
+
+          <button
+            type="button"
+            class="tl-faq-q"
+          >
+            <span>Is my session private?</span>
+            <span class="tl-plus">+</span>
+          </button>
+
+          <div class="tl-faq-a">
+            Sessions are intended to be private
+            and confidential, subject to applicable
+            professional and legal requirements.
+          </div>
+
+        </div>
+
+
+        <div class="tl-faq-item">
+
+          <button
+            type="button"
+            class="tl-faq-q"
+          >
+            <span>Can I change therapists?</span>
+            <span class="tl-plus">+</span>
+          </button>
+
+          <div class="tl-faq-a">
+            If a therapist doesn't feel like
+            the right fit, you can choose another
+            available therapist.
+          </div>
+
         </div>
 
       </div>
 
     </div>
 
-  </div>
+  </section>
 
 
+  <!-- FINAL CTA -->
 
-  <!-- ==========================================
-       FINAL CTA
-  =========================================== -->
+  <section class="tl-final">
 
-  <div class="tl-final">
+    <h2>
+      Maybe you don't need better AI.
+    </h2>
 
-    <div class="tl-final-inner">
+    <p>
+      Maybe you just need someone real to talk to.
+    </p>
 
-      <div class="tl-label tl-label-light">
-        <span></span>
-        YOUR NEXT CONVERSATION
-      </div>
+    <a
+      href="#tl-plans-{{ section.id }}"
+      class="tl-btn tl-btn-white"
+    >
+      Find your therapist ↗
+    </a>
 
-      <h2>
-        Maybe you don't need
-        another <i>answer.</i>
-      </h2>
+  </section>
 
-      <p>
-        Maybe you just need someone
-        who listens.
-      </p>
 
-      <a
-        href="#therapy-plans"
-        class="tl-btn tl-btn-light"
-      >
-        Talk To a Human
-        <span>↗</span>
+  <!-- FOOTER -->
+
+  <footer class="tl-footer">
+
+    <div class="tl-footer-logo">
+      therapy<span>lane</span>
+    </div>
+
+    <p>
+      Human-first therapy for real life.
+    </p>
+
+    <div class="tl-footer-links">
+
+      <a href="/policies/privacy-policy">
+        Privacy
+      </a>
+
+      <a href="/policies/terms-of-service">
+        Terms
+      </a>
+
+      <a href="/pages/contact">
+        Contact
       </a>
 
     </div>
 
-  </div>
+  </footer>
+
+
+  <script>
+    (function () {
+
+      const root = document.getElementById(
+        "therapy-lane-{{ section.id }}"
+      );
+
+      if (!root) return;
+
+      const questions = root.querySelectorAll(".tl-faq-q");
+
+      questions.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+          const item =
+            button.closest(".tl-faq-item");
+
+          root
+            .querySelectorAll(".tl-faq-item")
+            .forEach(function (other) {
+
+              if (other !== item) {
+                other.classList.remove("open");
+              }
+
+            });
+
+          item.classList.toggle("open");
+
+        });
+
+      });
+
+    })();
+  </script>
+
+
+  {% schema %}
+  {
+    "name": "Therapy Lane Home",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "hero_image",
+        "label": "Hero background image"
+      },
+      {
+        "type": "product",
+        "id": "standard_product",
+        "label": "Standard Therapist product"
+      },
+      {
+        "type": "product",
+        "id": "experienced_product",
+        "label": "Highly Experienced Therapist product"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Therapy Lane Home"
+      }
+    ]
+  }
+  {% endschema %}
 
 </section>
-
-
-
-<style>
-
-/* =====================================================
-   THERAPY LANE
-===================================================== */
-
-.therapy-lane {
-
-  --tl-ink: #173330;
-  --tl-green: #2f665e;
-  --tl-sage: #91b3a6;
-  --tl-mint: #dcebe4;
-  --tl-cream: #faf8f1;
-  --tl-orange: #f2ad68;
-  --tl-white: #ffffff;
-
-  background: var(--tl-cream);
-  color: var(--tl-ink);
-
-  overflow: hidden;
-
-}
-
-
-.therapy-lane *,
-.therapy-lane *::before,
-.therapy-lane *::after {
-
-  box-sizing: border-box;
-
-}
-
-
-.therapy-lane a {
-
-  text-decoration: none;
-
-}
-
-
-
-/* =====================================================
-   LABEL
-===================================================== */
-
-.tl-label {
-
-  display: flex;
-  align-items: center;
-
-  gap: 9px;
-
-  font-size: 11px;
-  font-weight: 800;
-
-  letter-spacing: .15em;
-
-  color: var(--tl-green);
-
-}
-
-
-.tl-label span {
-
-  width: 7px;
-  height: 7px;
-
-  border-radius: 50%;
-
-  background: var(--tl-orange);
-
-}
-
-
-
-/* =====================================================
-   HERO
-===================================================== */
-
-.tl-hero {
-
-  max-width: 1400px;
-
-  min-height: 760px;
-
-  margin: auto;
-
-  padding:
-    100px
-    7vw
-    90px;
-
-  display: grid;
-
-  grid-template-columns:
-    minmax(0, 1fr)
-    minmax(0, 1fr);
-
-  align-items: center;
-
-  gap: 70px;
-
-}
-
-
-.tl-hero-content {
-
-  position: relative;
-  z-index: 3;
-
-}
-
-
-.tl-hero h1 {
-
-  margin:
-    25px 0
-    25px;
-
-  font-size:
-    clamp(56px, 7vw, 96px);
-
-  line-height: .92;
-
-  letter-spacing: -.07em;
-
-  font-weight: 750;
-
-}
-
-
-.tl-hero h1 i,
-.tl-section-heading h2 i,
-.tl-final h2 i {
-
-  font-style: normal;
-
-  color: var(--tl-green);
-
-}
-
-
-.tl-hero-text {
-
-  max-width: 510px;
-
-  margin-bottom: 35px;
-
-  color: #627772;
-
-  font-size: 18px;
-
-  line-height: 1.65;
-
-}
-
-
-.tl-hero-buttons {
-
-  display: flex;
-
-  flex-wrap: wrap;
-
-  gap: 12px;
-
-}
-
-
-.tl-btn {
-
-  min-height: 54px;
-
-  padding:
-    0 24px;
-
-  display: inline-flex;
-
-  align-items: center;
-  justify-content: center;
-
-  gap: 22px;
-
-  border-radius: 999px;
-
-  font-size: 13px;
-
-  font-weight: 800;
-
-  transition:
-    transform .25s ease,
-    box-shadow .25s ease;
-
-}
-
-
-.tl-btn:hover {
-
-  transform: translateY(-3px);
-
-}
-
-
-.tl-btn-primary {
-
-  background: var(--tl-ink);
-
-  color: white;
-
-  box-shadow:
-    0 16px 35px
-    rgba(23,51,48,.18);
-
-}
-
-
-.tl-btn-secondary {
-
-  background: white;
-
-  border:
-    1px solid
-    rgba(23,51,48,.12);
-
-  color: var(--tl-ink);
-
-}
-
-
-.tl-trust {
-
-  margin-top: 40px;
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 13px;
-
-}
-
-
-.tl-mini-avatars {
-
-  display: flex;
-
-}
-
-
-.tl-mini-avatars span {
-
-  width: 34px;
-  height: 34px;
-
-  margin-left: -7px;
-
-  display: grid;
-
-  place-items: center;
-
-  border:
-    2px solid
-    var(--tl-cream);
-
-  border-radius: 50%;
-
-  background: var(--tl-mint);
-
-  font-size: 10px;
-
-  font-weight: 900;
-
-}
-
-
-.tl-mini-avatars span:first-child {
-
-  margin-left: 0;
-
-}
-
-
-.tl-trust strong,
-.tl-trust small {
-
-  display: block;
-
-}
-
-
-.tl-trust strong {
-
-  font-size: 12px;
-
-}
-
-
-.tl-trust small {
-
-  margin-top: 3px;
-
-  color: #80938e;
-
-  font-size: 10px;
-
-}
-
-
-
-/* =====================================================
-   HERO VISUAL
-===================================================== */
-
-.tl-hero-visual {
-
-  position: relative;
-
-  min-height: 520px;
-
-  display: grid;
-
-  place-items: center;
-
-}
-
-
-.tl-circle {
-
-  position: absolute;
-
-  border:
-    1px solid
-    rgba(47,102,94,.13);
-
-  border-radius: 50%;
-
-}
-
-
-.tl-circle-one {
-
-  width: 470px;
-  height: 470px;
-
-}
-
-
-.tl-circle-two {
-
-  width: 350px;
-  height: 350px;
-
-}
-
-
-.tl-therapy-card {
-
-  position: relative;
-
-  z-index: 3;
-
-  width: min(410px, 85%);
-
-  padding: 27px;
-
-  background:
-    rgba(255,255,255,.9);
-
-  border:
-    1px solid
-    rgba(23,51,48,.08);
-
-  border-radius: 30px;
-
-  box-shadow:
-    0 35px 80px
-    rgba(40,70,65,.14);
-
-  backdrop-filter: blur(20px);
-
-  animation:
-    tl-card-float
-    5s ease-in-out infinite;
-
-}
-
-
-@keyframes tl-card-float {
-
-  0%,
-  100% {
-
-    transform: translateY(0);
-
-  }
-
-  50% {
-
-    transform: translateY(-12px);
-
-  }
-
-}
-
-
-.tl-card-status {
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 8px;
-
-  color: #718782;
-
-  font-size: 9px;
-
-  font-weight: 900;
-
-  letter-spacing: .12em;
-
-}
-
-
-.tl-card-status span {
-
-  width: 7px;
-  height: 7px;
-
-  background: #62aa7f;
-
-  border-radius: 50%;
-
-}
-
-
-.tl-profile {
-
-  margin: 28px 0;
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 13px;
-
-}
-
-
-.tl-profile-icon {
-
-  width: 54px;
-  height: 54px;
-
-  display: grid;
-
-  place-items: center;
-
-  background: var(--tl-mint);
-
-  border-radius: 18px;
-
-  font-size: 22px;
-
-}
-
-
-.tl-profile strong,
-.tl-profile small {
-
-  display: block;
-
-}
-
-
-.tl-profile strong {
-
-  font-size: 16px;
-
-}
-
-
-.tl-profile small {
-
-  margin-top: 4px;
-
-  color: #80938e;
-
-  font-size: 11px;
-
-}
-
-
-.tl-quote {
-
-  padding: 22px;
-
-  background: #f1f7f4;
-
-  border-radius: 20px;
-
-  font-size: 15px;
-
-  line-height: 1.6;
-
-}
-
-
-.tl-quote span {
-
-  color: var(--tl-orange);
-
-  font-size: 35px;
-
-  vertical-align: -8px;
-
-}
-
-
-.tl-card-divider {
-
-  height: 1px;
-
-  margin:
-    23px 0;
-
-  background: #e2eae6;
-
-}
-
-
-.tl-card-info {
-
-  display: flex;
-
-  justify-content: space-between;
-
-  color: #80918d;
-
-  font-size: 10px;
-
-}
-
-
-.tl-floating-card {
-
-  position: absolute;
-
-  z-index: 4;
-
-  padding:
-    11px 15px;
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 8px;
-
-  background: white;
-
-  border:
-    1px solid
-    rgba(23,51,48,.07);
-
-  border-radius: 999px;
-
-  box-shadow:
-    0 15px 35px
-    rgba(23,51,48,.1);
-
-  font-size: 10px;
-
-  font-weight: 800;
-
-}
-
-
-.tl-floating-card span {
-
-  width: 23px;
-  height: 23px;
-
-  display: grid;
-
-  place-items: center;
-
-  border-radius: 50%;
-
-  background: var(--tl-mint);
-
-}
-
-
-.tl-floating-one {
-
-  left: 0;
-
-  bottom: 75px;
-
-}
-
-
-.tl-floating-two {
-
-  right: 0;
-
-  top: 70px;
-
-}
-
-
-
-/* =====================================================
-   BENEFITS
-===================================================== */
-
-.tl-benefits {
-
-  max-width: 1200px;
-
-  margin: auto;
-
-  padding:
-    65px 40px;
-
-  display: grid;
-
-  grid-template-columns:
-    repeat(3, 1fr);
-
-  border-top:
-    1px solid
-    rgba(23,51,48,.1);
-
-}
-
-
-.tl-benefit {
-
-  padding: 25px;
-
-}
-
-
-.tl-benefit small {
-
-  color: var(--tl-orange);
-
-  font-size: 10px;
-
-  font-weight: 900;
-
-}
-
-
-.tl-benefit h3 {
-
-  margin:
-    28px 0 9px;
-
-  font-size: 20px;
-
-}
-
-
-.tl-benefit p {
-
-  max-width: 280px;
-
-  color: #718681;
-
-  font-size: 13px;
-
-  line-height: 1.7;
-
-}
-
-
-
-/* =====================================================
-   PLANS
-===================================================== */
-
-.tl-plans {
-
-  max-width: 1200px;
-
-  margin: auto;
-
-  padding:
-    110px 40px;
-
-}
-
-
-.tl-section-heading {
-
-  max-width: 680px;
-
-  margin-bottom: 50px;
-
-}
-
-
-.tl-section-heading h2 {
-
-  margin:
-    18px 0;
-
-  font-size:
-    clamp(48px, 5vw, 70px);
-
-  line-height: .98;
-
-  letter-spacing: -.06em;
-
-}
-
-
-.tl-section-heading p {
-
-  color: #71847f;
-
-  font-size: 15px;
-
-  line-height: 1.7;
-
-}
-
-
-.tl-plan-grid {
-
-  display: grid;
-
-  grid-template-columns:
-    repeat(2, 1fr);
-
-  gap: 18px;
-
-  max-width: 900px;
-
-  margin: auto;
-
-}
-
-
-.tl-plan {
-
-  position: relative;
-
-  min-height: 530px;
-
-  padding: 35px;
-
-  display: flex;
-
-  flex-direction: column;
-
-  background:
-    rgba(255,255,255,.65);
-
-  border:
-    1px solid
-    rgba(23,51,48,.1);
-
-  border-radius: 30px;
-
-  transition:
-    transform .3s ease,
-    box-shadow .3s ease;
-
-}
-
-
-.tl-plan:hover {
-
-  transform: translateY(-7px);
-
-  box-shadow:
-    0 25px 55px
-    rgba(23,51,48,.1);
-
-}
-
-
-.tl-plan-featured {
-
-  background: var(--tl-mint);
-
-  border-color: transparent;
-
-}
-
-
-.tl-popular {
-
-  position: absolute;
-
-  top: 20px;
-  right: 20px;
-
-  padding:
-    7px 11px;
-
-  background:
-    var(--tl-orange);
-
-  border-radius: 999px;
-
-  color: #49321f;
-
-  font-size: 8px;
-
-  font-weight: 900;
-
-  letter-spacing: .1em;
-
-}
-
-
-.tl-plan-number {
-
-  color: #91a39e;
-
-  font-size: 10px;
-
-  font-weight: 900;
-
-}
-
-
-.tl-plan-type {
-
-  margin-top: 50px;
-
-  color: var(--tl-green);
-
-  font-size: 10px;
-
-  font-weight: 900;
-
-  letter-spacing: .13em;
-
-}
-
-
-.tl-plan h3 {
-
-  margin:
-    14px 0 10px;
-
-  font-size: 29px;
-
-  letter-spacing: -.04em;
-
-}
-
-
-.tl-plan > p {
-
-  color: #70847e;
-
-  font-size: 13px;
-
-  line-height: 1.7;
-
-}
-
-
-.tl-price {
-
-  margin-top: auto;
-
-  font-size: 68px;
-
-  line-height: 1;
-
-  font-weight: 750;
-
-  letter-spacing: -.06em;
-
-}
-
-
-.tl-price span {
-
-  position: relative;
-
-  top: -25px;
-
-  font-size: 20px;
-
-}
-
-
-.tl-plan-details {
-
-  margin:
-    18px 0 25px;
-
-  display: grid;
-
-  gap: 8px;
-
-  color: #71847f;
-
-  font-size: 11px;
-
-}
-
-
-.tl-plan-details div {
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 8px;
-
-}
-
-
-.tl-plan-details span {
-
-  color: var(--tl-green);
-
-  font-weight: 900;
-
-}
-
-
-.tl-plan-button {
-
-  width: 100%;
-
-  min-height: 54px;
-
-  padding:
-    0 20px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  border:
-    1px solid
-    rgba(23,51,48,.15);
-
-  border-radius: 999px;
-
-  background: transparent;
-
-  color: var(--tl-ink);
-
-  font: inherit;
-
-  font-size: 12px;
-
-  font-weight: 900;
-
-  cursor: pointer;
-
-  transition:
-    .25s ease;
-
-}
-
-
-.tl-plan-button:hover {
-
-  background: var(--tl-ink);
-
-  color: white;
-
-}
-
-
-.tl-plan-button-dark {
-
-  background: var(--tl-ink);
-
-  color: white;
-
-  border-color:
-    var(--tl-ink);
-
-}
-
-
-.tl-plan-button-dark:hover {
-
-  background:
-    var(--tl-green);
-
-}
-
-
-
-/* =====================================================
-   HOW IT WORKS
-===================================================== */
-
-.tl-how {
-
-  max-width: 1200px;
-
-  margin: auto;
-
-  padding:
-    90px 40px 120px;
-
-}
-
-
-.tl-center {
-
-  margin-left: auto;
-  margin-right: auto;
-
-  text-align: center;
-
-}
-
-
-.tl-center .tl-label {
-
-  justify-content: center;
-
-}
-
-
-.tl-steps {
-
-  margin-top: 55px;
-
-  display: grid;
-
-  grid-template-columns:
-    repeat(3, 1fr);
-
-  border-top:
-    1px solid
-    rgba(23,51,48,.1);
-
-}
-
-
-.tl-step {
-
-  padding: 30px;
-
-  display: flex;
-
-  gap: 25px;
-
-  border-right:
-    1px solid
-    rgba(23,51,48,.1);
-
-}
-
-
-.tl-step:last-child {
-
-  border-right: 0;
-
-}
-
-
-.tl-step > span {
-
-  color: var(--tl-orange);
-
-  font-size: 10px;
-
-  font-weight: 900;
-
-}
-
-
-.tl-step h3 {
-
-  margin: 0 0 9px;
-
-  font-size: 19px;
-
-}
-
-
-.tl-step p {
-
-  margin: 0;
-
-  color: #71847f;
-
-  font-size: 12px;
-
-  line-height: 1.7;
-
-}
-
-
-
-/* =====================================================
-   FINAL CTA
-===================================================== */
-
-.tl-final {
-
-  min-height: 580px;
-
-  padding:
-    100px 20px;
-
-  display: grid;
-
-  place-items: center;
-
-  background:
-    var(--tl-ink);
-
-  color: white;
-
-  text-align: center;
-
-}
-
-
-.tl-final-inner {
-
-  max-width: 900px;
-
-}
-
-
-.tl-label-light {
-
-  justify-content: center;
-
-  color: #a7c1b9;
-
-}
-
-
-.tl-final h2 {
-
-  margin:
-    25px auto;
-
-  font-size:
-    clamp(46px, 6vw, 78px);
-
-  line-height: .98;
-
-  letter-spacing: -.06em;
-
-}
-
-
-.tl-final h2 i {
-
-  color: #b9d4c9;
-
-}
-
-
-.tl-final p {
-
-  margin-bottom: 32px;
-
-  color: #a5bbb5;
-
-  font-size: 16px;
-
-}
-
-
-.tl-btn-light {
-
-  background: white;
-
-  color: var(--tl-ink);
-
-}
-
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media screen and (max-width: 749px) {
-
-
-  .tl-hero {
-
-    min-height: auto;
-
-    padding:
-      65px 20px 55px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: stretch;
-
-    gap: 45px;
-
-  }
-
-
-  .tl-hero h1 {
-
-    font-size:
-      clamp(50px, 14vw, 70px);
-
-  }
-
-
-  .tl-hero-text {
-
-    font-size: 16px;
-
-  }
-
-
-  .tl-hero-buttons {
-
-    flex-direction: column;
-
-  }
-
-
-  .tl-btn {
-
-    width: 100%;
-
-  }
-
-
-  .tl-hero-visual {
-
-    min-height: 380px;
-
-  }
-
-
-  .tl-circle-one {
-
-    width: 320px;
-    height: 320px;
-
-  }
-
-
-  .tl-circle-two {
-
-    width: 250px;
-    height: 250px;
-
-  }
-
-
-  .tl-therapy-card {
-
-    width: 88%;
-
-    padding: 20px;
-
-    border-radius: 24px;
-
-  }
-
-
-  .tl-floating-one {
-
-    left: -2px;
-
-    bottom: 20px;
-
-  }
-
-
-  .tl-floating-two {
-
-    right: -2px;
-
-    top: 15px;
-
-  }
-
-
-  /* BENEFITS */
-
-  .tl-benefits {
-
-    display: flex;
-
-    overflow-x: auto;
-
-    gap: 10px;
-
-    padding:
-      25px 20px 55px;
-
-    scroll-snap-type:
-      x mandatory;
-
-  }
-
-
-  .tl-benefit {
-
-    min-width: 78vw;
-
-    padding: 25px;
-
-    background: white;
-
-    border-radius: 22px;
-
-    scroll-snap-align: start;
-
-  }
-
-
-  /* PLANS */
-
-  .tl-plans {
-
-    padding:
-      75px 20px;
-
-  }
-
-
-  .tl-section-heading h2 {
-
-    font-size: 48px;
-
-  }
-
-
-  .tl-plan-grid {
-
-    display: flex;
-
-    overflow-x: auto;
-
-    gap: 12px;
-
-    margin-right: -20px;
-
-    padding-right: 20px;
-
-    scroll-snap-type:
-      x mandatory;
-
-  }
-
-
-  .tl-plan {
-
-    flex:
-      0 0 84vw;
-
-    min-height: 500px;
-
-    padding: 28px;
-
-    scroll-snap-align: start;
-
-  }
-
-
-  /* HOW */
-
-  .tl-how {
-
-    padding:
-      70px 20px 90px;
-
-  }
-
-
-  .tl-steps {
-
-    display: block;
-
-    margin-top: 35px;
-
-  }
-
-
-  .tl-step {
-
-    padding:
-      25px 0;
-
-    border-right: 0;
-
-    border-bottom:
-      1px solid
-      rgba(23,51,48,.1);
-
-  }
-
-
-  .tl-step:last-child {
-
-    border-bottom: 0;
-
-  }
-
-
-  /* FINAL */
-
-  .tl-final {
-
-    min-height: 550px;
-
-    padding:
-      80px 20px;
-
-  }
-
-
-  .tl-final h2 {
-
-    font-size: 48px;
-
-  }
-
-}
-
-
-
-/* REDUCED MOTION */
-
-@media (prefers-reduced-motion: reduce) {
-
-  .tl-therapy-card {
-
-    animation: none;
-
-  }
-
-}
-
-</style>
-
-
-
-{% schema %}
-
-{
-  "name": "Therapy Lane Home",
-
-  "settings": [
-
-    {
-      "type": "product",
-      "id": "standard_product",
-      "label": "Standard Therapist"
-    },
-
-    {
-      "type": "product",
-      "id": "experienced_product",
-      "label": "Highly Experienced Therapist"
-    }
-
-  ],
-
-  "presets": [
-
-    {
-      "name": "Therapy Lane Home"
-    }
-
-  ]
-
-}
-
-{% endschema %}

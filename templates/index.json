@@ -3,6 +3,7 @@
     "therapy_lane_home": {
       "type": "therapy-lane-home",
       "settings": {
+        "hero_image": "",
         "standard_product": "",
         "experienced_product": ""
       }

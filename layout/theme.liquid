@@ -27,6 +27,12 @@
     {% if request.design_mode %}
       {%- render 'theme-editor' -%}
     {% endif %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap"
+  rel="stylesheet"
+>
 
     {{ content_for_header }}
   </head>
@@ -37,9 +43,11 @@
     {% render 'chat-drawer' %}
 
     <div class="page-wrapper">
-      <div id="header-group">
-        {% sections 'header-group' %}
-      </div>
+{% unless request.page_type == 'index' %}
+  <div id="header-group">
+    {% sections 'header-group' %}
+  </div>
+{% endunless %}
 
       <script>
         /**
@@ -159,9 +167,11 @@
         {{ content_for_layout }}
       </main>
 
-      <footer>
-        {% sections 'footer-group' %}
-      </footer>
+{% unless request.page_type == 'index' %}
+  <footer>
+    {% sections 'footer-group' %}
+  </footer>
+{% endunless %}
     </div>
 
     {% render 'cart-drawer', render_wrapper: true %}
