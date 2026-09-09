@@ -1,0 +1,2877 @@
+{% liquid
+  assign current_product = product
+  assign current_variant = product.selected_or_first_available_variant
+%}
+
+<section
+  class="tl-product"
+  data-section-id="{{ section.id }}"
+  data-product-id="{{ product.id }}"
+>
+
+  <!-- =====================================================
+       PRODUCT HERO
+  ====================================================== -->
+
+  <div class="tl-product-container">
+
+    <div class="tl-product-grid">
+
+      <!-- =================================================
+           LEFT — MEDIA
+      ================================================== -->
+
+      <div class="tl-product-media">
+
+        {% if product.featured_image %}
+
+          <div class="tl-main-image-wrap">
+
+            <div class="tl-image-label">
+              100% HUMAN
+            </div>
+
+            <div class="tl-main-image">
+
+              {% assign first_image = product.featured_image %}
+
+              {{
+                first_image
+                | image_url: width: 1400
+                | image_tag:
+                  loading: 'eager',
+                  class: 'tl-main-product-image',
+                  alt: first_image.alt | default: product.title
+              }}
+
+            </div>
+
+          </div>
+
+        {% else %}
+
+          <div class="tl-image-placeholder">
+
+            <span>
+              therapy<span>lane</span>
+            </span>
+
+          </div>
+
+        {% endif %}
+
+
+        {% if product.images.size > 1 %}
+
+          <div class="tl-thumbnails">
+
+            {% for image in product.images %}
+
+              <button
+                type="button"
+                class="tl-thumbnail {% if forloop.first %}is-active{% endif %}"
+                data-image="{{ image | image_url: width: 1400 }}"
+                aria-label="View image {{ forloop.index }}"
+              >
+
+                {{
+                  image
+                  | image_url: width: 180
+                  | image_tag:
+                    loading: 'lazy',
+                    alt: image.alt | default: product.title
+                }}
+
+              </button>
+
+            {% endfor %}
+
+          </div>
+
+        {% endif %}
+
+      </div>
+
+
+      <!-- =================================================
+           RIGHT — PRODUCT INFORMATION
+      ================================================== -->
+
+      <div class="tl-product-info">
+
+        <div class="tl-product-eyebrow">
+
+          <span>
+            {% if product.type != blank %}
+              {{ product.type }}
+            {% else %}
+              THERAPY SESSION
+            {% endif %}
+          </span>
+
+          <span class="tl-product-number">
+            01 · HUMAN
+          </span>
+
+        </div>
+
+
+        <h1 class="tl-product-title">
+          {{ product.title }}
+        </h1>
+
+
+        <div class="tl-product-intro">
+
+          {% if product.description != blank %}
+
+            {{ product.description
+              | strip_html
+              | truncatewords: 34
+            }}
+
+          {% else %}
+
+            Real human therapy with someone qualified,
+            present, and genuinely here to listen.
+
+          {% endif %}
+
+        </div>
+
+
+        <!-- PRICE -->
+
+        <div class="tl-product-price-wrap">
+
+          <div
+            class="tl-product-price"
+            data-price
+          >
+            {{ current_variant.price | money }}
+          </div>
+
+          <span class="tl-price-suffix">
+            / session
+          </span>
+
+        </div>
+
+
+        <!-- TRUST POINTS -->
+
+        <div class="tl-trust-list">
+
+          <div class="tl-trust-item">
+
+            <span class="tl-check">
+              ✓
+            </span>
+
+            <span>
+              Real human therapist
+            </span>
+
+          </div>
+
+
+          <div class="tl-trust-item">
+
+            <span class="tl-check">
+              ✓
+            </span>
+
+            <span>
+              Private 1:1 session
+            </span>
+
+          </div>
+
+
+          <div class="tl-trust-item">
+
+            <span class="tl-check">
+              ✓
+            </span>
+
+            <span>
+              No AI therapy
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             PURCHASE AREA
+        ================================================== -->
+
+        {% form 'product',
+          product,
+          id: 'tl-product-form',
+          class: 'tl-product-form'
+        %}
+
+          <input
+            type="hidden"
+            name="id"
+            value="{{ current_variant.id }}"
+            data-variant-id
+          >
+
+
+          {% unless product.has_only_default_variant %}
+
+            <div class="tl-options">
+
+              {% for option in product.options_with_values %}
+
+                <div class="tl-option">
+
+                  <label class="tl-option-label">
+
+                    {{ option.name }}
+
+                  </label>
+
+
+                  <div class="tl-option-values">
+
+                    {% for value in option.values %}
+
+                      {% liquid
+                        assign option_available = false
+
+                        for variant in product.variants
+                          if variant.available
+                            if option.position == 1 and variant.option1 == value
+                              assign option_available = true
+                            elsif option.position == 2 and variant.option2 == value
+                              assign option_available = true
+                            elsif option.position == 3 and variant.option3 == value
+                              assign option_available = true
+                            endif
+                          endif
+                        endfor
+                      %}
+
+                      <button
+                        type="button"
+                        class="tl-option-button {% if option.selected_value == value %}is-selected{% endif %}"
+                        data-option-position="{{ option.position }}"
+                        data-option-value="{{ value | escape }}"
+                        {% unless option_available %}
+                          disabled
+                        {% endunless %}
+                      >
+
+                        {{ value }}
+
+                      </button>
+
+                    {% endfor %}
+
+                  </div>
+
+                </div>
+
+              {% endfor %}
+
+            </div>
+
+          {% endunless %}
+
+
+          <!-- QUANTITY -->
+
+          <div class="tl-quantity-row">
+
+            <label>
+              Quantity
+            </label>
+
+            <div class="tl-quantity">
+
+              <button
+                type="button"
+                data-quantity-minus
+                aria-label="Decrease quantity"
+              >
+                −
+              </button>
+
+              <input
+                type="number"
+                name="quantity"
+                value="1"
+                min="1"
+                data-quantity
+              >
+
+              <button
+                type="button"
+                data-quantity-plus
+                aria-label="Increase quantity"
+              >
+                +
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- ADD TO CART -->
+
+          <button
+            type="submit"
+            class="tl-add-button"
+            {% unless current_variant.available %}
+              disabled
+            {% endunless %}
+            data-add-button
+          >
+
+            <span data-add-label>
+
+              {% if current_variant.available %}
+                Book this session
+              {% else %}
+                Sold out
+              {% endif %}
+
+            </span>
+
+            <span class="tl-arrow">
+              ↗
+            </span>
+
+          </button>
+
+
+          <div class="tl-secure-note">
+
+            <span class="tl-secure-dot"></span>
+
+            Private conversation · Human therapist · No AI
+
+          </div>
+
+        {% endform %}
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       TRUST SECTION
+  ====================================================== -->
+
+  <section class="tl-trust-section">
+
+    <div class="tl-container">
+
+      <div class="tl-section-kicker">
+        WHY THERAPY LANE
+      </div>
+
+      <h2 class="tl-section-title">
+        You don't need<br>
+        another algorithm.
+      </h2>
+
+
+      <div class="tl-trust-grid">
+
+        <article class="tl-trust-card">
+
+          <span class="tl-card-number">
+            01
+          </span>
+
+          <div class="tl-card-icon">
+            ✦
+          </div>
+
+          <h3>
+            Actually human
+          </h3>
+
+          <p>
+            Your session is with a real therapist.
+            No bot pretending to understand you.
+          </p>
+
+        </article>
+
+
+        <article class="tl-trust-card tl-trust-card-dark">
+
+          <span class="tl-card-number">
+            02
+          </span>
+
+          <div class="tl-card-icon">
+            ◌
+          </div>
+
+          <h3>
+            Private by design
+          </h3>
+
+          <p>
+            One-on-one conversations focused on you,
+            your experience, and what you want to work through.
+          </p>
+
+        </article>
+
+
+        <article class="tl-trust-card">
+
+          <span class="tl-card-number">
+            03
+          </span>
+
+          <div class="tl-card-icon">
+            +
+          </div>
+
+          <h3>
+            Professional support
+          </h3>
+
+          <p>
+            Choose the therapist experience level
+            that feels right for you.
+          </p>
+
+        </article>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       HOW IT WORKS
+  ====================================================== -->
+
+  <section class="tl-how">
+
+    <div class="tl-container">
+
+      <div class="tl-section-kicker">
+        SIMPLE BY DESIGN
+      </div>
+
+      <h2 class="tl-section-title">
+        Three steps.<br>
+        No weirdness.
+      </h2>
+
+
+      <div class="tl-steps">
+
+        <article class="tl-step">
+
+          <span class="tl-step-number">
+            01
+          </span>
+
+          <h3>
+            Choose a human
+          </h3>
+
+          <p>
+            Pick the therapist experience level
+            that feels right for you.
+          </p>
+
+        </article>
+
+
+        <article class="tl-step">
+
+          <span class="tl-step-number">
+            02
+          </span>
+
+          <h3>
+            Book your session
+          </h3>
+
+          <p>
+            Choose a time that works without
+            navigating a complicated process.
+          </p>
+
+        </article>
+
+
+        <article class="tl-step">
+
+          <span class="tl-step-number">
+            03
+          </span>
+
+          <h3>
+            Start talking
+          </h3>
+
+          <p>
+            Show up as yourself.
+            Your therapist is there to listen.
+          </p>
+
+        </article>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       DESCRIPTION
+  ====================================================== -->
+
+  <section class="tl-description">
+
+    <div class="tl-container">
+
+      <div class="tl-description-grid">
+
+        <div>
+
+          <div class="tl-section-kicker">
+            ABOUT THIS OPTION
+          </div>
+
+          <h2 class="tl-description-title">
+            Therapy that feels<br>
+            like talking to a person.
+          </h2>
+
+        </div>
+
+
+        <div class="tl-description-copy">
+
+          {% if product.description != blank %}
+
+            {{ product.description }}
+
+          {% else %}
+
+            <p>
+              Therapy Lane is built around real human
+              connection. Your session gives you space
+              to talk, reflect, and work through what's
+              actually going on.
+            </p>
+
+            <p>
+              No automated responses. No AI pretending
+              to be a therapist. Just a qualified human
+              being there with you.
+            </p>
+
+          {% endif %}
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       FAQ
+  ====================================================== -->
+
+  <section class="tl-faq">
+
+    <div class="tl-container">
+
+      <div class="tl-section-kicker">
+        QUESTIONS
+      </div>
+
+      <h2 class="tl-section-title">
+        No fine-print energy.
+      </h2>
+
+
+      <div class="tl-faq-list">
+
+        <div class="tl-faq-item">
+
+          <button
+            type="button"
+            class="tl-faq-question"
+          >
+
+            <span>
+              Is this a real human therapist?
+            </span>
+
+            <span class="tl-faq-plus">
+              +
+            </span>
+
+          </button>
+
+          <div class="tl-faq-answer">
+
+            Yes. Therapy Lane is built around
+            real human therapists. There are no
+            AI therapists pretending to provide therapy.
+
+          </div>
+
+        </div>
+
+
+        <div class="tl-faq-item">
+
+          <button
+            type="button"
+            class="tl-faq-question"
+          >
+
+            <span>
+              What's included in the session?
+            </span>
+
+            <span class="tl-faq-plus">
+              +
+            </span>
+
+          </button>
+
+          <div class="tl-faq-answer">
+
+            Your session is a private one-on-one
+            conversation with a human therapist.
+
+          </div>
+
+        </div>
+
+
+        <div class="tl-faq-item">
+
+          <button
+            type="button"
+            class="tl-faq-question"
+          >
+
+            <span>
+              Can I change therapists?
+            </span>
+
+            <span class="tl-faq-plus">
+              +
+            </span>
+
+          </button>
+
+          <div class="tl-faq-answer">
+
+            If a therapist doesn't feel like the right
+            fit, you can choose another available therapist.
+
+          </div>
+
+        </div>
+
+
+        <div class="tl-faq-item">
+
+          <button
+            type="button"
+            class="tl-faq-question"
+          >
+
+            <span>
+              Is my session private?
+            </span>
+
+            <span class="tl-faq-plus">
+              +
+            </span>
+
+          </button>
+
+          <div class="tl-faq-answer">
+
+            Sessions are intended to be private and
+            confidential, subject to applicable
+            professional and legal requirements.
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       FINAL CTA
+  ====================================================== -->
+
+  <section class="tl-final">
+
+    <div class="tl-final-inner">
+
+      <div class="tl-final-kicker">
+        MAYBE YOU DON'T NEED BETTER AI.
+      </div>
+
+      <h2>
+        Maybe you just need
+        someone real to talk to.
+      </h2>
+
+      <p>
+        Human-first therapy for real life.
+      </p>
+
+      <a
+        href="#tl-product-form"
+        class="tl-final-button"
+      >
+        Book your session ↗
+      </a>
+
+    </div>
+
+  </section>
+
+
+  <!-- =====================================================
+       STICKY MOBILE / DESKTOP PURCHASE BAR
+  ====================================================== -->
+
+  <div
+    class="tl-sticky-buy"
+    data-sticky-buy
+  >
+
+    <div class="tl-sticky-product">
+
+      {% if product.featured_image %}
+
+        {{
+          product.featured_image
+          | image_url: width: 120
+          | image_tag:
+            loading: 'lazy',
+            alt: product.title
+        }}
+
+      {% endif %}
+
+      <div>
+
+        <strong>
+          {{ product.title }}
+        </strong>
+
+        <small>
+          Human therapy session
+        </small>
+
+      </div>
+
+    </div>
+
+
+    <div class="tl-sticky-price">
+
+      <span data-sticky-price>
+        {{ current_variant.price | money }}
+      </span>
+
+      <small>
+        / session
+      </small>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="tl-sticky-button"
+      data-sticky-button
+    >
+      Book session ↗
+    </button>
+
+  </div>
+
+
+</section>
+
+
+<style>
+
+  /* =====================================================
+     VARIABLES
+  ====================================================== */
+
+  .tl-product {
+    --tl-green: #173330;
+    --tl-green-light: #234944;
+    --tl-sage: #8eafa2;
+    --tl-mint: #dcebe4;
+    --tl-cream: #faf8f1;
+    --tl-orange: #f2ad68;
+    --tl-white: #ffffff;
+    --tl-muted: #6d7d79;
+    --tl-line: rgba(23, 51, 48, .10);
+
+    font-family:
+      "DM Sans",
+      system-ui,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      sans-serif;
+
+    color: var(--tl-green);
+    background: var(--tl-cream);
+
+    overflow: hidden;
+  }
+
+
+  .tl-product *,
+  .tl-product *::before,
+  .tl-product *::after {
+    box-sizing: border-box;
+  }
+
+
+  /* =====================================================
+     GLOBAL
+  ====================================================== */
+
+  .tl-container,
+  .tl-product-container {
+    width: min(1120px, calc(100% - 32px));
+    margin-inline: auto;
+  }
+
+
+  /* =====================================================
+     PRODUCT HERO
+  ====================================================== */
+
+  .tl-product-container {
+    padding: 48px 0 95px;
+  }
+
+
+  .tl-product-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(380px, .8fr);
+    gap: 70px;
+    align-items: start;
+  }
+
+
+  /* =====================================================
+     MEDIA
+  ====================================================== */
+
+  .tl-product-media {
+    min-width: 0;
+  }
+
+
+  .tl-main-image-wrap {
+    position: relative;
+  }
+
+
+  .tl-main-image {
+    position: relative;
+
+    width: 100%;
+    aspect-ratio: 1 / 1.08;
+
+    overflow: hidden;
+
+    background: var(--tl-mint);
+
+    border-radius: 34px;
+
+    box-shadow:
+      0 25px 70px rgba(23, 51, 48, .10);
+  }
+
+
+  .tl-main-product-image {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    transition:
+      opacity .3s ease,
+      transform .5s ease;
+  }
+
+
+  .tl-main-image:hover .tl-main-product-image {
+    transform: scale(1.025);
+  }
+
+
+  .tl-image-label {
+    position: absolute;
+
+    top: 18px;
+    left: 18px;
+
+    z-index: 3;
+
+    padding: 8px 12px;
+
+    background: rgba(255, 255, 255, .88);
+
+    border: 1px solid rgba(23, 51, 48, .08);
+
+    border-radius: 999px;
+
+    backdrop-filter: blur(14px);
+
+    color: var(--tl-green);
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+  }
+
+
+  .tl-image-placeholder {
+    aspect-ratio: 1 / 1.08;
+
+    display: grid;
+    place-items: center;
+
+    background: var(--tl-green);
+
+    border-radius: 34px;
+
+    color: white;
+
+    font-family: "Manrope", sans-serif;
+    font-size: 34px;
+    font-weight: 800;
+  }
+
+
+  .tl-image-placeholder span span {
+    color: var(--tl-sage);
+  }
+
+
+  /* =====================================================
+     THUMBNAILS
+  ====================================================== */
+
+  .tl-thumbnails {
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 12px;
+
+    overflow-x: auto;
+
+    scrollbar-width: none;
+  }
+
+
+  .tl-thumbnails::-webkit-scrollbar {
+    display: none;
+  }
+
+
+  .tl-thumbnail {
+    flex: 0 0 76px;
+
+    width: 76px;
+    height: 76px;
+
+    padding: 0;
+
+    overflow: hidden;
+
+    background: white;
+
+    border: 1px solid var(--tl-line);
+
+    border-radius: 16px;
+
+    cursor: pointer;
+
+    opacity: .58;
+
+    transition:
+      opacity .2s ease,
+      transform .2s ease,
+      border-color .2s ease;
+  }
+
+
+  .tl-thumbnail:hover {
+    opacity: 1;
+
+    transform: translateY(-2px);
+  }
+
+
+  .tl-thumbnail.is-active {
+    opacity: 1;
+
+    border: 2px solid var(--tl-green);
+  }
+
+
+  .tl-thumbnail img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+  }
+
+
+  /* =====================================================
+     PRODUCT INFO
+  ====================================================== */
+
+  .tl-product-info {
+    position: sticky;
+    top: 110px;
+
+    padding-top: 18px;
+  }
+
+
+  .tl-product-eyebrow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid var(--tl-line);
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+  }
+
+
+  .tl-product-eyebrow > span:first-child {
+    color: var(--tl-sage);
+  }
+
+
+  .tl-product-number {
+    color: var(--tl-muted);
+
+    opacity: .7;
+  }
+
+
+  .tl-product-title {
+    margin: 30px 0 15px;
+
+    max-width: 600px;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: clamp(42px, 5vw, 68px);
+
+    line-height: .98;
+
+    letter-spacing: -2.5px;
+
+    font-weight: 800;
+  }
+
+
+  .tl-product-intro {
+    max-width: 510px;
+
+    color: var(--tl-muted);
+
+    font-size: 14px;
+
+    line-height: 1.8;
+
+    letter-spacing: .1px;
+  }
+
+
+  /* =====================================================
+     PRICE
+  ====================================================== */
+
+  .tl-product-price-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+
+    margin-top: 32px;
+  }
+
+
+  .tl-product-price {
+    font-family: "Manrope", sans-serif;
+
+    font-size: 48px;
+
+    font-weight: 800;
+
+    letter-spacing: -1.8px;
+
+    line-height: 1;
+  }
+
+
+  .tl-price-suffix {
+    color: var(--tl-muted);
+
+    font-size: 11px;
+  }
+
+
+  /* =====================================================
+     TRUST LIST
+  ====================================================== */
+
+  .tl-trust-list {
+    display: grid;
+
+    gap: 9px;
+
+    margin-top: 26px;
+  }
+
+
+  .tl-trust-item {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    font-size: 11px;
+  }
+
+
+  .tl-check {
+    width: 19px;
+    height: 19px;
+
+    display: grid;
+    place-items: center;
+
+    flex: none;
+
+    background: var(--tl-mint);
+
+    border-radius: 50%;
+
+    color: var(--tl-green);
+
+    font-size: 9px;
+    font-weight: 900;
+  }
+
+
+  /* =====================================================
+     FORM
+  ====================================================== */
+
+  .tl-product-form {
+    margin-top: 30px;
+  }
+
+
+  /* =====================================================
+     OPTIONS
+  ====================================================== */
+
+  .tl-options {
+    display: grid;
+
+    gap: 22px;
+
+    margin-bottom: 26px;
+  }
+
+
+  .tl-option {
+    display: grid;
+
+    gap: 10px;
+  }
+
+
+  .tl-option-label {
+    font-size: 10px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1.3px;
+  }
+
+
+  .tl-option-values {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+  }
+
+
+  .tl-option-button {
+    min-height: 44px;
+
+    padding: 0 17px;
+
+    background: white;
+
+    border: 1px solid var(--tl-line);
+
+    border-radius: 13px;
+
+    color: var(--tl-green);
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+      background .2s ease,
+      color .2s ease,
+      border-color .2s ease,
+      transform .2s ease;
+  }
+
+
+  .tl-option-button:hover {
+    transform: translateY(-1px);
+
+    border-color: var(--tl-green);
+  }
+
+
+  .tl-option-button.is-selected {
+    background: var(--tl-green);
+
+    border-color: var(--tl-green);
+
+    color: white;
+  }
+
+
+  .tl-option-button:disabled {
+    cursor: not-allowed;
+
+    opacity: .35;
+
+    text-decoration: line-through;
+  }
+
+
+  /* =====================================================
+     QUANTITY
+  ====================================================== */
+
+  .tl-quantity-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 14px;
+  }
+
+
+  .tl-quantity-row > label {
+    font-size: 10px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1.3px;
+  }
+
+
+  .tl-quantity {
+    display: flex;
+
+    align-items: center;
+
+    overflow: hidden;
+
+    background: white;
+
+    border: 1px solid var(--tl-line);
+
+    border-radius: 13px;
+  }
+
+
+  .tl-quantity button {
+    width: 38px;
+    height: 38px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--tl-green);
+
+    font-size: 18px;
+
+    cursor: pointer;
+  }
+
+
+  .tl-quantity input {
+    width: 38px;
+    height: 38px;
+
+    padding: 0;
+
+    border: 0;
+
+    outline: 0;
+
+    background: transparent;
+
+    color: var(--tl-green);
+
+    text-align: center;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 700;
+  }
+
+
+  /* =====================================================
+     ADD BUTTON
+  ====================================================== */
+
+  .tl-add-button {
+    width: 100%;
+
+    min-height: 64px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 22px;
+
+    border: 0;
+
+    border-radius: 18px;
+
+    background: var(--tl-green);
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+      0 15px 35px rgba(23, 51, 48, .15);
+
+    transition:
+      transform .25s ease,
+      box-shadow .25s ease,
+      background .25s ease;
+  }
+
+
+  .tl-add-button:hover:not(:disabled) {
+    transform: translateY(-3px);
+
+    background: var(--tl-green-light);
+
+    box-shadow:
+      0 20px 45px rgba(23, 51, 48, .20);
+  }
+
+
+  .tl-add-button:disabled {
+    cursor: not-allowed;
+
+    opacity: .45;
+  }
+
+
+  .tl-arrow {
+    width: 36px;
+    height: 36px;
+
+    display: grid;
+    place-items: center;
+
+    background: rgba(255,255,255,.12);
+
+    border-radius: 50%;
+
+    font-size: 16px;
+  }
+
+
+  .tl-secure-note {
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-top: 13px;
+
+    color: var(--tl-muted);
+
+    font-size: 9px;
+
+    letter-spacing: .2px;
+  }
+
+
+  .tl-secure-dot {
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: var(--tl-sage);
+  }
+
+
+  /* =====================================================
+     TRUST SECTION
+  ====================================================== */
+
+  .tl-trust-section {
+    padding: 105px 0;
+
+    background: white;
+  }
+
+
+  .tl-section-kicker {
+    color: var(--tl-sage);
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+    text-transform: uppercase;
+  }
+
+
+  .tl-section-title {
+    margin: 13px 0 0;
+
+    max-width: 760px;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: clamp(38px, 6vw, 66px);
+
+    font-weight: 800;
+
+    line-height: 1;
+
+    letter-spacing: -2px;
+  }
+
+
+  .tl-trust-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 14px;
+
+    margin-top: 45px;
+  }
+
+
+  .tl-trust-card {
+    position: relative;
+
+    min-height: 290px;
+
+    padding: 26px;
+
+    background: var(--tl-cream);
+
+    border: 1px solid var(--tl-line);
+
+    border-radius: 28px;
+
+    transition:
+      transform .25s ease,
+      box-shadow .25s ease;
+  }
+
+
+  .tl-trust-card:hover {
+    transform: translateY(-4px);
+
+    box-shadow:
+      0 22px 50px rgba(23,51,48,.08);
+  }
+
+
+  .tl-trust-card-dark {
+    background: var(--tl-green);
+
+    color: white;
+  }
+
+
+  .tl-card-number {
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+
+    opacity: .45;
+  }
+
+
+  .tl-card-icon {
+    margin-top: 48px;
+
+    width: 42px;
+    height: 42px;
+
+    display: grid;
+    place-items: center;
+
+    background: var(--tl-mint);
+
+    border-radius: 50%;
+
+    color: var(--tl-green);
+
+    font-size: 17px;
+  }
+
+
+  .tl-card-dark .tl-card-icon {
+    background: white;
+  }
+
+
+  .tl-trust-card h3 {
+    margin: 25px 0 8px;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 22px;
+
+    font-weight: 800;
+
+    letter-spacing: -.4px;
+  }
+
+
+  .tl-trust-card p {
+    max-width: 290px;
+
+    margin: 0;
+
+    color: var(--tl-muted);
+
+    font-size: 12px;
+
+    line-height: 1.75;
+  }
+
+
+  .tl-trust-card-dark p {
+    color: rgba(255,255,255,.62);
+  }
+
+
+  /* =====================================================
+     HOW
+  ====================================================== */
+
+  .tl-how {
+    padding: 105px 0;
+
+    background: var(--tl-mint);
+  }
+
+
+  .tl-steps {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 12px;
+
+    margin-top: 42px;
+  }
+
+
+  .tl-step {
+    min-height: 230px;
+
+    padding: 25px;
+
+    background: rgba(255,255,255,.65);
+
+    border: 1px solid rgba(23,51,48,.08);
+
+    border-radius: 25px;
+  }
+
+
+  .tl-step-number {
+    font-family: "Manrope", sans-serif;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.2px;
+
+    opacity: .4;
+  }
+
+
+  .tl-step h3 {
+    margin: 55px 0 9px;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 22px;
+
+    font-weight: 800;
+  }
+
+
+  .tl-step p {
+    max-width: 280px;
+
+    margin: 0;
+
+    color: var(--tl-muted);
+
+    font-size: 12px;
+
+    line-height: 1.75;
+  }
+
+
+  /* =====================================================
+     DESCRIPTION
+  ====================================================== */
+
+  .tl-description {
+    padding: 110px 0;
+
+    background: var(--tl-cream);
+  }
+
+
+  .tl-description-grid {
+    display: grid;
+
+    grid-template-columns: 1fr .85fr;
+
+    gap: 80px;
+
+    align-items: start;
+  }
+
+
+  .tl-description-title {
+    margin: 14px 0 0;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: clamp(35px, 5vw, 58px);
+
+    line-height: 1.02;
+
+    letter-spacing: -1.6px;
+  }
+
+
+  .tl-description-copy {
+    color: var(--tl-muted);
+
+    font-size: 14px;
+
+    line-height: 1.85;
+  }
+
+
+  .tl-description-copy p {
+    margin: 0 0 22px;
+  }
+
+
+  .tl-description-copy p:last-child {
+    margin-bottom: 0;
+  }
+
+
+  /* =====================================================
+     FAQ
+  ====================================================== */
+
+  .tl-faq {
+    padding: 105px 0;
+
+    background: white;
+  }
+
+
+  .tl-faq-list {
+    margin-top: 42px;
+
+    border-top: 1px solid var(--tl-line);
+  }
+
+
+  .tl-faq-item {
+    border-bottom: 1px solid var(--tl-line);
+  }
+
+
+  .tl-faq-question {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 23px 0;
+
+    border: 0;
+
+    background: transparent;
+
+    color: var(--tl-green);
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    text-align: left;
+
+    cursor: pointer;
+  }
+
+
+  .tl-faq-plus {
+    flex: none;
+
+    font-size: 22px;
+
+    font-weight: 400;
+
+    transition: transform .25s ease;
+  }
+
+
+  .tl-faq-answer {
+    max-height: 0;
+
+    overflow: hidden;
+
+    max-width: 700px;
+
+    color: var(--tl-muted);
+
+    font-size: 12px;
+
+    line-height: 1.8;
+
+    transition:
+      max-height .3s ease,
+      padding .3s ease;
+  }
+
+
+  .tl-faq-item.is-open
+  .tl-faq-answer {
+    max-height: 180px;
+
+    padding-bottom: 22px;
+  }
+
+
+  .tl-faq-item.is-open
+  .tl-faq-plus {
+    transform: rotate(45deg);
+  }
+
+
+  /* =====================================================
+     FINAL CTA
+  ====================================================== */
+
+  .tl-final {
+    margin: 0 16px 30px;
+
+    padding: 100px 25px;
+
+    background:
+      radial-gradient(
+        circle at 85% 15%,
+        rgba(142,175,162,.72),
+        transparent 25%
+      ),
+      radial-gradient(
+        circle at 10% 100%,
+        rgba(242,173,104,.65),
+        transparent 26%
+      ),
+      var(--tl-green);
+
+    border-radius: 42px;
+
+    color: white;
+
+    text-align: center;
+  }
+
+
+  .tl-final-inner {
+    max-width: 760px;
+
+    margin: auto;
+  }
+
+
+  .tl-final-kicker {
+    color: rgba(255,255,255,.55);
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+  }
+
+
+  .tl-final h2 {
+    margin: 18px auto 0;
+
+    max-width: 750px;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: clamp(40px, 7vw, 72px);
+
+    line-height: .98;
+
+    letter-spacing: -2px;
+
+    font-weight: 800;
+  }
+
+
+  .tl-final p {
+    margin: 18px 0 0;
+
+    color: rgba(255,255,255,.62);
+
+    font-size: 13px;
+  }
+
+
+  .tl-final-button {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 52px;
+
+    margin-top: 28px;
+
+    padding: 0 22px;
+
+    background: white;
+
+    border-radius: 999px;
+
+    color: var(--tl-green);
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    text-decoration: none;
+
+    transition:
+      transform .25s ease,
+      box-shadow .25s ease;
+  }
+
+
+  .tl-final-button:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+      0 15px 35px rgba(0,0,0,.15);
+  }
+
+
+  /* =====================================================
+     STICKY BAR
+  ====================================================== */
+
+  .tl-sticky-buy {
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 20px;
+
+    z-index: 50;
+
+    width: min(700px, calc(100% - 28px));
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 9px;
+
+    background: rgba(255,255,255,.90);
+
+    border: 1px solid rgba(23,51,48,.10);
+
+    border-radius: 20px;
+
+    box-shadow:
+      0 25px 70px rgba(23,51,48,.16);
+
+    backdrop-filter: blur(20px);
+
+    transform:
+      translateX(-50%)
+      translateY(calc(100% + 50px));
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+      transform .35s ease,
+      opacity .35s ease;
+  }
+
+
+  .tl-sticky-buy.is-visible {
+    transform:
+      translateX(-50%)
+      translateY(0);
+
+    opacity: 1;
+
+    pointer-events: auto;
+  }
+
+
+  .tl-sticky-product {
+    min-width: 0;
+
+    flex: 1;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+  }
+
+
+  .tl-sticky-product img {
+    width: 42px;
+    height: 42px;
+
+    flex: none;
+
+    object-fit: cover;
+
+    border-radius: 11px;
+  }
+
+
+  .tl-sticky-product strong {
+    display: block;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    font-size: 11px;
+  }
+
+
+  .tl-sticky-product small {
+    display: block;
+
+    margin-top: 2px;
+
+    color: var(--tl-muted);
+
+    font-size: 9px;
+  }
+
+
+  .tl-sticky-price {
+    display: flex;
+
+    align-items: baseline;
+
+    gap: 3px;
+
+    white-space: nowrap;
+
+    font-family: "Manrope", sans-serif;
+
+    font-size: 17px;
+
+    font-weight: 800;
+  }
+
+
+  .tl-sticky-price small {
+    color: var(--tl-muted);
+
+    font-family: "DM Sans", sans-serif;
+
+    font-size: 8px;
+
+    font-weight: 500;
+  }
+
+
+  .tl-sticky-button {
+    min-height: 45px;
+
+    padding: 0 17px;
+
+    border: 0;
+
+    border-radius: 12px;
+
+    background: var(--tl-green);
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+  }
+
+
+  /* =====================================================
+     TABLET
+  ====================================================== */
+
+  @media (max-width: 900px) {
+
+    .tl-product-grid {
+      grid-template-columns: 1fr;
+
+      gap: 42px;
+    }
+
+
+    .tl-product-info {
+      position: static;
+
+      padding-top: 0;
+    }
+
+
+    .tl-product-title {
+      max-width: 700px;
+
+      font-size: clamp(44px, 9vw, 68px);
+    }
+
+
+    .tl-trust-grid,
+    .tl-steps {
+      grid-template-columns: 1fr;
+    }
+
+
+    .tl-trust-card {
+      min-height: 240px;
+    }
+
+
+    .tl-description-grid {
+      grid-template-columns: 1fr;
+
+      gap: 40px;
+    }
+
+  }
+
+
+  /* =====================================================
+     MOBILE
+  ====================================================== */
+
+  @media (max-width: 600px) {
+
+    .tl-container,
+    .tl-product-container {
+      width: calc(100% - 24px);
+    }
+
+
+    .tl-product-container {
+      padding-top: 24px;
+
+      padding-bottom: 70px;
+    }
+
+
+    .tl-main-image,
+    .tl-image-placeholder {
+      aspect-ratio: .94;
+    }
+
+
+    .tl-main-image {
+      border-radius: 25px;
+    }
+
+
+    .tl-thumbnail {
+      flex-basis: 64px;
+
+      width: 64px;
+      height: 64px;
+
+      border-radius: 13px;
+    }
+
+
+    .tl-product-title {
+      margin-top: 24px;
+
+      font-size: 45px;
+
+      line-height: .98;
+
+      letter-spacing: -1.8px;
+    }
+
+
+    .tl-product-intro {
+      font-size: 13px;
+
+      line-height: 1.75;
+    }
+
+
+    .tl-product-price {
+      font-size: 42px;
+    }
+
+
+    .tl-trust-section,
+    .tl-how,
+    .tl-description,
+    .tl-faq {
+      padding: 75px 0;
+    }
+
+
+    .tl-section-title {
+      font-size: 41px;
+
+      letter-spacing: -1.3px;
+    }
+
+
+    .tl-trust-grid {
+      margin-top: 30px;
+    }
+
+
+    .tl-trust-card {
+      min-height: 250px;
+
+      padding: 22px;
+
+      border-radius: 23px;
+    }
+
+
+    .tl-card-icon {
+      margin-top: 35px;
+    }
+
+
+    .tl-step {
+      min-height: 190px;
+
+      padding: 22px;
+
+      border-radius: 22px;
+    }
+
+
+    .tl-step h3 {
+      margin-top: 35px;
+    }
+
+
+    .tl-description-title {
+      font-size: 38px;
+
+      letter-spacing: -1.2px;
+    }
+
+
+    .tl-final {
+      margin: 0 12px 18px;
+
+      padding: 72px 20px;
+
+      border-radius: 30px;
+    }
+
+
+    .tl-final h2 {
+      font-size: 43px;
+
+      letter-spacing: -1.4px;
+    }
+
+
+    .tl-sticky-buy {
+      bottom: 10px;
+
+      width: calc(100% - 20px);
+
+      padding: 8px;
+
+      border-radius: 17px;
+    }
+
+
+    .tl-sticky-product img {
+      width: 38px;
+      height: 38px;
+    }
+
+
+    .tl-sticky-price {
+      display: none;
+    }
+
+
+    .tl-sticky-button {
+      min-height: 43px;
+
+      padding: 0 14px;
+    }
+
+  }
+
+
+  /* =====================================================
+     SMALL MOBILE
+  ====================================================== */
+
+  @media (max-width: 390px) {
+
+    .tl-product-title {
+      font-size: 40px;
+    }
+
+
+    .tl-product-price {
+      font-size: 38px;
+    }
+
+
+    .tl-section-title {
+      font-size: 36px;
+    }
+
+
+    .tl-final h2 {
+      font-size: 39px;
+    }
+
+  }
+
+
+  /* =====================================================
+     REDUCED MOTION
+  ====================================================== */
+
+  @media (prefers-reduced-motion: reduce) {
+
+    .tl-product *,
+    .tl-product *::before,
+    .tl-product *::after {
+      scroll-behavior: auto !important;
+
+      transition: none !important;
+    }
+
+  }
+
+</style>
+
+
+<script>
+
+  (() => {
+
+    const root = document.querySelector(
+      '.tl-product[data-section-id="{{ section.id }}"]'
+    );
+
+    if (!root) return;
+
+
+    /* ===================================================
+       PRODUCT VARIANTS
+    =================================================== */
+
+    const productData = {{ product | json }};
+
+    const form = root.querySelector('#tl-product-form');
+
+    const variantInput =
+      root.querySelector('[data-variant-id]');
+
+    const priceElement =
+      root.querySelector('[data-price]');
+
+    const stickyPrice =
+      root.querySelector('[data-sticky-price]');
+
+    const addButton =
+      root.querySelector('[data-add-button]');
+
+    const addLabel =
+      root.querySelector('[data-add-label]');
+
+
+    let selectedOptions =
+      productData.selected_or_first_available_variant
+        ? productData.selected_or_first_available_variant.options
+        : [];
+
+
+    function formatMoney(cents) {
+
+      const moneyFormat =
+        {{ shop.money_format | json }};
+
+      if (window.Shopify &&
+          typeof Shopify.formatMoney === 'function') {
+
+        return Shopify.formatMoney(
+          cents,
+          moneyFormat
+        );
+
+      }
+
+      return '$' + (cents / 100).toFixed(2);
+
+    }
+
+
+    function findVariant() {
+
+      return productData.variants.find(
+        variant => {
+
+          return variant.options.every(
+            (option, index) => {
+
+              return option === selectedOptions[index];
+
+            }
+          );
+
+        }
+      );
+
+    }
+
+
+    function updateVariant() {
+
+      const variant = findVariant();
+
+      if (!variant) {
+
+        if (addButton) {
+          addButton.disabled = true;
+        }
+
+        return;
+
+      }
+
+
+      selectedOptions =
+        variant.options;
+
+
+      if (variantInput) {
+
+        variantInput.value =
+          variant.id;
+
+      }
+
+
+      if (priceElement) {
+
+        priceElement.innerHTML =
+          formatMoney(variant.price);
+
+      }
+
+
+      if (stickyPrice) {
+
+        stickyPrice.innerHTML =
+          formatMoney(variant.price);
+
+      }
+
+
+      if (addButton) {
+
+        addButton.disabled =
+          !variant.available;
+
+      }
+
+
+      if (addLabel) {
+
+        addLabel.textContent =
+          variant.available
+            ? 'Book this session'
+            : 'Sold out';
+
+      }
+
+
+      /* UPDATE SELECTED BUTTONS */
+
+      root
+        .querySelectorAll('.tl-option-button')
+        .forEach(button => {
+
+          const position =
+            Number(
+              button.dataset.optionPosition
+            ) - 1;
+
+          const value =
+            button.dataset.optionValue;
+
+          button.classList.toggle(
+            'is-selected',
+            selectedOptions[position] === value
+          );
+
+        });
+
+
+      /* UPDATE IMAGE */
+
+      if (variant.featured_image) {
+
+        const imageUrl =
+          variant.featured_image
+            .src
+            .replace(
+              /(\.[^./?]+)(\?.*)?$/,
+              '_1400x$1$2'
+            );
+
+        const image =
+          root.querySelector(
+            '.tl-main-product-image'
+          );
+
+        if (image) {
+
+          image.src =
+            imageUrl;
+
+        }
+
+      }
+
+    }
+
+
+    /* OPTION BUTTONS */
+
+    root
+      .querySelectorAll('.tl-option-button')
+      .forEach(button => {
+
+        button.addEventListener(
+          'click',
+          () => {
+
+            const position =
+              Number(
+                button.dataset.optionPosition
+              ) - 1;
+
+            selectedOptions[position] =
+              button.dataset.optionValue;
+
+            updateVariant();
+
+          }
+        );
+
+      });
+
+
+    /* ===================================================
+       THUMBNAILS
+    =================================================== */
+
+    const mainImage =
+      root.querySelector(
+        '.tl-main-product-image'
+      );
+
+
+    root
+      .querySelectorAll('.tl-thumbnail')
+      .forEach(thumbnail => {
+
+        thumbnail.addEventListener(
+          'click',
+          () => {
+
+            if (!mainImage) return;
+
+            const image =
+              thumbnail.dataset.image;
+
+            mainImage.style.opacity = '0';
+
+
+            setTimeout(() => {
+
+              mainImage.src =
+                image;
+
+              mainImage.style.opacity = '1';
+
+            }, 150);
+
+
+            root
+              .querySelectorAll('.tl-thumbnail')
+              .forEach(item => {
+
+                item.classList.remove(
+                  'is-active'
+                );
+
+              });
+
+
+            thumbnail.classList.add(
+              'is-active'
+            );
+
+          }
+        );
+
+      });
+
+
+    /* ===================================================
+       QUANTITY
+    =================================================== */
+
+    const quantity =
+      root.querySelector(
+        '[data-quantity]'
+      );
+
+
+    const minus =
+      root.querySelector(
+        '[data-quantity-minus]'
+      );
+
+
+    const plus =
+      root.querySelector(
+        '[data-quantity-plus]'
+      );
+
+
+    if (minus && quantity) {
+
+      minus.addEventListener(
+        'click',
+        () => {
+
+          const value =
+            Math.max(
+              1,
+              Number(quantity.value) - 1
+            );
+
+          quantity.value =
+            value;
+
+        }
+      );
+
+    }
+
+
+    if (plus && quantity) {
+
+      plus.addEventListener(
+        'click',
+        () => {
+
+          quantity.value =
+            Number(quantity.value) + 1;
+
+        }
+      );
+
+    }
+
+
+    /* ===================================================
+       FAQ
+    =================================================== */
+
+    root
+      .querySelectorAll('.tl-faq-question')
+      .forEach(button => {
+
+        button.addEventListener(
+          'click',
+          () => {
+
+            const item =
+              button.closest(
+                '.tl-faq-item'
+              );
+
+
+            root
+              .querySelectorAll('.tl-faq-item')
+              .forEach(other => {
+
+                if (other !== item) {
+
+                  other.classList.remove(
+                    'is-open'
+                  );
+
+                }
+
+              });
+
+
+            item.classList.toggle(
+              'is-open'
+            );
+
+          }
+        );
+
+      });
+
+
+    /* ===================================================
+       STICKY BUY
+    =================================================== */
+
+    const sticky =
+      root.querySelector(
+        '[data-sticky-buy]'
+      );
+
+
+    const stickyButton =
+      root.querySelector(
+        '[data-sticky-button]'
+      );
+
+
+    const heroForm =
+      root.querySelector(
+        '#tl-product-form'
+      );
+
+
+    if (sticky && heroForm) {
+
+      const observer =
+        new IntersectionObserver(
+          entries => {
+
+            const entry =
+              entries[0];
+
+            sticky.classList.toggle(
+              'is-visible',
+              !entry.isIntersecting
+            );
+
+          },
+          {
+            threshold: 0
+          }
+        );
+
+
+      observer.observe(
+        heroForm
+      );
+
+    }
+
+
+    if (stickyButton && heroForm) {
+
+      stickyButton.addEventListener(
+        'click',
+        () => {
+
+          heroForm.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
+
+        }
+      );
+
+    }
+
+
+    /* INITIAL VARIANT */
+
+    updateVariant();
+
+  })();
+
+</script>
+
+
+{% schema %}
+
+{
+  "name": "Therapy Lane Product",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Therapy Lane Product"
+    }
+  ]
+}
+
+{% endschema %}
