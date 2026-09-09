@@ -283,72 +283,18 @@
           {% endunless %}
 
 
-          <!-- QUANTITY -->
-
-          <div class="tl-quantity-row">
-
-            <label>
-              Quantity
-            </label>
-
-            <div class="tl-quantity">
-
-              <button
-                type="button"
-                data-quantity-minus
-                aria-label="Decrease quantity"
-              >
-                −
-              </button>
-
-              <input
-                type="number"
-                name="quantity"
-                value="1"
-                min="1"
-                data-quantity
-              >
-
-              <button
-                type="button"
-                data-quantity-plus
-                aria-label="Increase quantity"
-              >
-                +
-              </button>
-
-            </div>
-
-          </div>
-
-
           <!-- ADD TO CART -->
+<button
+  type="submit"
+  class="tl-add-button"
+  data-add-button
+>
+  <span data-add-label>
+    Book this session
+  </span>
 
-          <button
-            type="submit"
-            class="tl-add-button"
-            {% unless current_variant.available %}
-              disabled
-            {% endunless %}
-            data-add-button
-          >
-
-            <span data-add-label>
-
-              {% if current_variant.available %}
-                Book this session
-              {% else %}
-                Sold out
-              {% endif %}
-
-            </span>
-
-            <span class="tl-arrow">
-              ↗
-            </span>
-
-          </button>
-
+  <span class="tl-arrow">↗</span>
+</button>
 
           <div class="tl-secure-note">
 
@@ -1315,87 +1261,6 @@
     opacity: .35;
 
     text-decoration: line-through;
-  }
-
-
-  /* =====================================================
-     QUANTITY
-  ====================================================== */
-
-  .tl-quantity-row {
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    margin-bottom: 14px;
-  }
-
-
-  .tl-quantity-row > label {
-    font-size: 10px;
-
-    font-weight: 800;
-
-    text-transform: uppercase;
-
-    letter-spacing: 1.3px;
-  }
-
-
-  .tl-quantity {
-    display: flex;
-
-    align-items: center;
-
-    overflow: hidden;
-
-    background: white;
-
-    border: 1px solid var(--tl-line);
-
-    border-radius: 13px;
-  }
-
-
-  .tl-quantity button {
-    width: 38px;
-    height: 38px;
-
-    border: 0;
-
-    background: transparent;
-
-    color: var(--tl-green);
-
-    font-size: 18px;
-
-    cursor: pointer;
-  }
-
-
-  .tl-quantity input {
-    width: 38px;
-    height: 38px;
-
-    padding: 0;
-
-    border: 0;
-
-    outline: 0;
-
-    background: transparent;
-
-    color: var(--tl-green);
-
-    text-align: center;
-
-    font-family: inherit;
-
-    font-size: 12px;
-
-    font-weight: 700;
   }
 
 
@@ -2532,25 +2397,13 @@
 
       }
 
+if (addButton) {
+  addButton.disabled = false;
+}
 
-      if (addButton) {
-
-        addButton.disabled =
-          !variant.available;
-
-      }
-
-
-      if (addLabel) {
-
-        addLabel.textContent =
-          variant.available
-            ? 'Book this session'
-            : 'Sold out';
-
-      }
-
-
+if (addLabel) {
+  addLabel.textContent = 'Book this session';
+}
       /* UPDATE SELECTED BUTTONS */
 
       root
@@ -2683,64 +2536,6 @@
         );
 
       });
-
-
-    /* ===================================================
-       QUANTITY
-    =================================================== */
-
-    const quantity =
-      root.querySelector(
-        '[data-quantity]'
-      );
-
-
-    const minus =
-      root.querySelector(
-        '[data-quantity-minus]'
-      );
-
-
-    const plus =
-      root.querySelector(
-        '[data-quantity-plus]'
-      );
-
-
-    if (minus && quantity) {
-
-      minus.addEventListener(
-        'click',
-        () => {
-
-          const value =
-            Math.max(
-              1,
-              Number(quantity.value) - 1
-            );
-
-          quantity.value =
-            value;
-
-        }
-      );
-
-    }
-
-
-    if (plus && quantity) {
-
-      plus.addEventListener(
-        'click',
-        () => {
-
-          quantity.value =
-            Number(quantity.value) + 1;
-
-        }
-      );
-
-    }
 
 
     /* ===================================================
