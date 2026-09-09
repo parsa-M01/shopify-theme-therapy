@@ -1,0 +1,2007 @@
+{% liquid
+  assign standard = section.settings.standard_product
+  assign experienced = section.settings.experienced_product
+%}
+
+<section class="therapy-lane">
+
+  <!-- ==========================================
+       HERO
+  =========================================== -->
+
+  <div class="tl-hero">
+
+    <div class="tl-hero-content">
+
+      <div class="tl-label">
+        <span></span>
+        HUMAN-FIRST THERAPY
+      </div>
+
+      <h1>
+        Screw AI,<br>
+        <i>Talk To a Human.</i>
+      </h1>
+
+      <p class="tl-hero-text">
+        Real conversations with real therapists.
+        No bots. No algorithms pretending to understand you.
+      </p>
+
+      <div class="tl-hero-buttons">
+
+        {% if standard != blank %}
+          <a
+            href="#therapy-plans"
+            class="tl-btn tl-btn-primary"
+          >
+            Find Your Therapist
+            <span>↗</span>
+          </a>
+        {% endif %}
+
+        <a
+          href="#how-it-works"
+          class="tl-btn tl-btn-secondary"
+        >
+          How It Works
+        </a>
+
+      </div>
+
+      <div class="tl-trust">
+
+        <div class="tl-mini-avatars">
+          <span>H</span>
+          <span>T</span>
+          <span>+</span>
+        </div>
+
+        <div>
+          <strong>Someone real is listening.</strong>
+          <small>Private · Personal · Human</small>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- HERO VISUAL -->
+
+    <div class="tl-hero-visual">
+
+      <div class="tl-circle tl-circle-one"></div>
+      <div class="tl-circle tl-circle-two"></div>
+
+      <div class="tl-therapy-card">
+
+        <div class="tl-card-status">
+          <span></span>
+          THERAPIST AVAILABLE
+        </div>
+
+        <div class="tl-profile">
+
+          <div class="tl-profile-icon">
+            ✦
+          </div>
+
+          <div>
+            <strong>Your therapist</strong>
+            <small>Here to listen.</small>
+          </div>
+
+        </div>
+
+        <div class="tl-quote">
+
+          <span>“</span>
+
+          You don't have to
+          figure everything
+          out alone.
+
+        </div>
+
+        <div class="tl-card-divider"></div>
+
+        <div class="tl-card-info">
+
+          <span>Private session</span>
+          <span>45 min</span>
+
+        </div>
+
+      </div>
+
+
+      <div class="tl-floating-card tl-floating-one">
+        <span>♥</span>
+        Human support
+      </div>
+
+      <div class="tl-floating-card tl-floating-two">
+        <span>✓</span>
+        No AI
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ==========================================
+       WHY THERAPY LANE
+  =========================================== -->
+
+  <div class="tl-benefits">
+
+    <div class="tl-benefit">
+
+      <small>01</small>
+
+      <h3>Real humans</h3>
+
+      <p>
+        Talk with a real therapist,
+        not an AI chatbot.
+      </p>
+
+    </div>
+
+
+    <div class="tl-benefit">
+
+      <small>02</small>
+
+      <h3>Private conversations</h3>
+
+      <p>
+        Your thoughts deserve a
+        private and respectful space.
+      </p>
+
+    </div>
+
+
+    <div class="tl-benefit">
+
+      <small>03</small>
+
+      <h3>Simple therapy</h3>
+
+      <p>
+        Choose your therapist level
+        and take the first step.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <!-- ==========================================
+       PLANS
+  =========================================== -->
+
+  <div
+    class="tl-plans"
+    id="therapy-plans"
+  >
+
+    <div class="tl-section-heading">
+
+      <div class="tl-label">
+        <span></span>
+        CHOOSE YOUR THERAPIST
+      </div>
+
+      <h2>
+        Two ways to start
+        <i>talking.</i>
+      </h2>
+
+      <p>
+        Choose the level of experience
+        that feels right for you.
+      </p>
+
+    </div>
+
+
+    <div class="tl-plan-grid">
+
+
+      <!-- STANDARD -->
+
+      {% if standard != blank %}
+
+        <article class="tl-plan">
+
+          <div class="tl-plan-number">
+            01
+          </div>
+
+          <div class="tl-plan-type">
+            STANDARD THERAPIST
+          </div>
+
+          <h3>
+            Someone to talk to.
+          </h3>
+
+          <p>
+            A real therapist who gives you
+            space to talk, reflect and be heard.
+          </p>
+
+          <div class="tl-price">
+
+            <span>$</span>
+
+            {{ standard.price
+              | money_without_trailing_zeros
+              | remove: '$'
+            }}
+
+          </div>
+
+          <div class="tl-plan-details">
+
+            <div>
+              <span>✓</span>
+              Human therapist
+            </div>
+
+            <div>
+              <span>✓</span>
+              Private session
+            </div>
+
+            <div>
+              <span>✓</span>
+              45 minutes
+            </div>
+
+            <div>
+              <span>✓</span>
+              No AI
+            </div>
+
+          </div>
+
+
+          <form
+            method="post"
+            action="{{ routes.cart_add_url }}"
+          >
+
+            <input
+              type="hidden"
+              name="id"
+              value="{{ standard.selected_or_first_available_variant.id }}"
+            >
+
+            <button
+              type="submit"
+              class="tl-plan-button"
+            >
+
+              Choose Standard
+
+              <span>→</span>
+
+            </button>
+
+          </form>
+
+        </article>
+
+      {% endif %}
+
+
+
+      <!-- HIGHLY EXPERIENCED -->
+
+      {% if experienced != blank %}
+
+        <article class="tl-plan tl-plan-featured">
+
+          <div class="tl-popular">
+            RECOMMENDED
+          </div>
+
+          <div class="tl-plan-number">
+            02
+          </div>
+
+          <div class="tl-plan-type">
+            HIGHLY EXPERIENCED
+          </div>
+
+          <h3>
+            Go deeper.
+          </h3>
+
+          <p>
+            Work with a highly experienced
+            therapist for deeper support.
+          </p>
+
+          <div class="tl-price">
+
+            <span>$</span>
+
+            {{ experienced.price
+              | money_without_trailing_zeros
+              | remove: '$'
+            }}
+
+          </div>
+
+          <div class="tl-plan-details">
+
+            <div>
+              <span>✓</span>
+              Highly experienced therapist
+            </div>
+
+            <div>
+              <span>✓</span>
+              Private session
+            </div>
+
+            <div>
+              <span>✓</span>
+              45 minutes
+            </div>
+
+            <div>
+              <span>✓</span>
+              No AI
+            </div>
+
+          </div>
+
+
+          <form
+            method="post"
+            action="{{ routes.cart_add_url }}"
+          >
+
+            <input
+              type="hidden"
+              name="id"
+              value="{{ experienced.selected_or_first_available_variant.id }}"
+            >
+
+            <button
+              type="submit"
+              class="tl-plan-button tl-plan-button-dark"
+            >
+
+              Choose Experienced
+
+              <span>→</span>
+
+            </button>
+
+          </form>
+
+        </article>
+
+      {% endif %}
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ==========================================
+       HOW IT WORKS
+  =========================================== -->
+
+  <div
+    class="tl-how"
+    id="how-it-works"
+  >
+
+    <div class="tl-section-heading tl-center">
+
+      <div class="tl-label">
+        <span></span>
+        HOW IT WORKS
+      </div>
+
+      <h2>
+        Less scrolling.<br>
+        More <i>talking.</i>
+      </h2>
+
+    </div>
+
+
+    <div class="tl-steps">
+
+      <div class="tl-step">
+
+        <span>01</span>
+
+        <div>
+          <h3>Choose your therapist</h3>
+
+          <p>
+            Pick the experience level
+            that feels right for you.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="tl-step">
+
+        <span>02</span>
+
+        <div>
+          <h3>Place your order</h3>
+
+          <p>
+            Select your session and
+            complete your secure checkout.
+          </p>
+        </div>
+
+      </div>
+
+
+      <div class="tl-step">
+
+        <span>03</span>
+
+        <div>
+          <h3>Talk to a human</h3>
+
+          <p>
+            Have a real conversation
+            with someone who listens.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ==========================================
+       FINAL CTA
+  =========================================== -->
+
+  <div class="tl-final">
+
+    <div class="tl-final-inner">
+
+      <div class="tl-label tl-label-light">
+        <span></span>
+        YOUR NEXT CONVERSATION
+      </div>
+
+      <h2>
+        Maybe you don't need
+        another <i>answer.</i>
+      </h2>
+
+      <p>
+        Maybe you just need someone
+        who listens.
+      </p>
+
+      <a
+        href="#therapy-plans"
+        class="tl-btn tl-btn-light"
+      >
+        Talk To a Human
+        <span>↗</span>
+      </a>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<style>
+
+/* =====================================================
+   THERAPY LANE
+===================================================== */
+
+.therapy-lane {
+
+  --tl-ink: #173330;
+  --tl-green: #2f665e;
+  --tl-sage: #91b3a6;
+  --tl-mint: #dcebe4;
+  --tl-cream: #faf8f1;
+  --tl-orange: #f2ad68;
+  --tl-white: #ffffff;
+
+  background: var(--tl-cream);
+  color: var(--tl-ink);
+
+  overflow: hidden;
+
+}
+
+
+.therapy-lane *,
+.therapy-lane *::before,
+.therapy-lane *::after {
+
+  box-sizing: border-box;
+
+}
+
+
+.therapy-lane a {
+
+  text-decoration: none;
+
+}
+
+
+
+/* =====================================================
+   LABEL
+===================================================== */
+
+.tl-label {
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: .15em;
+
+  color: var(--tl-green);
+
+}
+
+
+.tl-label span {
+
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: var(--tl-orange);
+
+}
+
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.tl-hero {
+
+  max-width: 1400px;
+
+  min-height: 760px;
+
+  margin: auto;
+
+  padding:
+    100px
+    7vw
+    90px;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+
+  align-items: center;
+
+  gap: 70px;
+
+}
+
+
+.tl-hero-content {
+
+  position: relative;
+  z-index: 3;
+
+}
+
+
+.tl-hero h1 {
+
+  margin:
+    25px 0
+    25px;
+
+  font-size:
+    clamp(56px, 7vw, 96px);
+
+  line-height: .92;
+
+  letter-spacing: -.07em;
+
+  font-weight: 750;
+
+}
+
+
+.tl-hero h1 i,
+.tl-section-heading h2 i,
+.tl-final h2 i {
+
+  font-style: normal;
+
+  color: var(--tl-green);
+
+}
+
+
+.tl-hero-text {
+
+  max-width: 510px;
+
+  margin-bottom: 35px;
+
+  color: #627772;
+
+  font-size: 18px;
+
+  line-height: 1.65;
+
+}
+
+
+.tl-hero-buttons {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 12px;
+
+}
+
+
+.tl-btn {
+
+  min-height: 54px;
+
+  padding:
+    0 24px;
+
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 22px;
+
+  border-radius: 999px;
+
+  font-size: 13px;
+
+  font-weight: 800;
+
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease;
+
+}
+
+
+.tl-btn:hover {
+
+  transform: translateY(-3px);
+
+}
+
+
+.tl-btn-primary {
+
+  background: var(--tl-ink);
+
+  color: white;
+
+  box-shadow:
+    0 16px 35px
+    rgba(23,51,48,.18);
+
+}
+
+
+.tl-btn-secondary {
+
+  background: white;
+
+  border:
+    1px solid
+    rgba(23,51,48,.12);
+
+  color: var(--tl-ink);
+
+}
+
+
+.tl-trust {
+
+  margin-top: 40px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+}
+
+
+.tl-mini-avatars {
+
+  display: flex;
+
+}
+
+
+.tl-mini-avatars span {
+
+  width: 34px;
+  height: 34px;
+
+  margin-left: -7px;
+
+  display: grid;
+
+  place-items: center;
+
+  border:
+    2px solid
+    var(--tl-cream);
+
+  border-radius: 50%;
+
+  background: var(--tl-mint);
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+}
+
+
+.tl-mini-avatars span:first-child {
+
+  margin-left: 0;
+
+}
+
+
+.tl-trust strong,
+.tl-trust small {
+
+  display: block;
+
+}
+
+
+.tl-trust strong {
+
+  font-size: 12px;
+
+}
+
+
+.tl-trust small {
+
+  margin-top: 3px;
+
+  color: #80938e;
+
+  font-size: 10px;
+
+}
+
+
+
+/* =====================================================
+   HERO VISUAL
+===================================================== */
+
+.tl-hero-visual {
+
+  position: relative;
+
+  min-height: 520px;
+
+  display: grid;
+
+  place-items: center;
+
+}
+
+
+.tl-circle {
+
+  position: absolute;
+
+  border:
+    1px solid
+    rgba(47,102,94,.13);
+
+  border-radius: 50%;
+
+}
+
+
+.tl-circle-one {
+
+  width: 470px;
+  height: 470px;
+
+}
+
+
+.tl-circle-two {
+
+  width: 350px;
+  height: 350px;
+
+}
+
+
+.tl-therapy-card {
+
+  position: relative;
+
+  z-index: 3;
+
+  width: min(410px, 85%);
+
+  padding: 27px;
+
+  background:
+    rgba(255,255,255,.9);
+
+  border:
+    1px solid
+    rgba(23,51,48,.08);
+
+  border-radius: 30px;
+
+  box-shadow:
+    0 35px 80px
+    rgba(40,70,65,.14);
+
+  backdrop-filter: blur(20px);
+
+  animation:
+    tl-card-float
+    5s ease-in-out infinite;
+
+}
+
+
+@keyframes tl-card-float {
+
+  0%,
+  100% {
+
+    transform: translateY(0);
+
+  }
+
+  50% {
+
+    transform: translateY(-12px);
+
+  }
+
+}
+
+
+.tl-card-status {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  color: #718782;
+
+  font-size: 9px;
+
+  font-weight: 900;
+
+  letter-spacing: .12em;
+
+}
+
+
+.tl-card-status span {
+
+  width: 7px;
+  height: 7px;
+
+  background: #62aa7f;
+
+  border-radius: 50%;
+
+}
+
+
+.tl-profile {
+
+  margin: 28px 0;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+}
+
+
+.tl-profile-icon {
+
+  width: 54px;
+  height: 54px;
+
+  display: grid;
+
+  place-items: center;
+
+  background: var(--tl-mint);
+
+  border-radius: 18px;
+
+  font-size: 22px;
+
+}
+
+
+.tl-profile strong,
+.tl-profile small {
+
+  display: block;
+
+}
+
+
+.tl-profile strong {
+
+  font-size: 16px;
+
+}
+
+
+.tl-profile small {
+
+  margin-top: 4px;
+
+  color: #80938e;
+
+  font-size: 11px;
+
+}
+
+
+.tl-quote {
+
+  padding: 22px;
+
+  background: #f1f7f4;
+
+  border-radius: 20px;
+
+  font-size: 15px;
+
+  line-height: 1.6;
+
+}
+
+
+.tl-quote span {
+
+  color: var(--tl-orange);
+
+  font-size: 35px;
+
+  vertical-align: -8px;
+
+}
+
+
+.tl-card-divider {
+
+  height: 1px;
+
+  margin:
+    23px 0;
+
+  background: #e2eae6;
+
+}
+
+
+.tl-card-info {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  color: #80918d;
+
+  font-size: 10px;
+
+}
+
+
+.tl-floating-card {
+
+  position: absolute;
+
+  z-index: 4;
+
+  padding:
+    11px 15px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  background: white;
+
+  border:
+    1px solid
+    rgba(23,51,48,.07);
+
+  border-radius: 999px;
+
+  box-shadow:
+    0 15px 35px
+    rgba(23,51,48,.1);
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+}
+
+
+.tl-floating-card span {
+
+  width: 23px;
+  height: 23px;
+
+  display: grid;
+
+  place-items: center;
+
+  border-radius: 50%;
+
+  background: var(--tl-mint);
+
+}
+
+
+.tl-floating-one {
+
+  left: 0;
+
+  bottom: 75px;
+
+}
+
+
+.tl-floating-two {
+
+  right: 0;
+
+  top: 70px;
+
+}
+
+
+
+/* =====================================================
+   BENEFITS
+===================================================== */
+
+.tl-benefits {
+
+  max-width: 1200px;
+
+  margin: auto;
+
+  padding:
+    65px 40px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  border-top:
+    1px solid
+    rgba(23,51,48,.1);
+
+}
+
+
+.tl-benefit {
+
+  padding: 25px;
+
+}
+
+
+.tl-benefit small {
+
+  color: var(--tl-orange);
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+}
+
+
+.tl-benefit h3 {
+
+  margin:
+    28px 0 9px;
+
+  font-size: 20px;
+
+}
+
+
+.tl-benefit p {
+
+  max-width: 280px;
+
+  color: #718681;
+
+  font-size: 13px;
+
+  line-height: 1.7;
+
+}
+
+
+
+/* =====================================================
+   PLANS
+===================================================== */
+
+.tl-plans {
+
+  max-width: 1200px;
+
+  margin: auto;
+
+  padding:
+    110px 40px;
+
+}
+
+
+.tl-section-heading {
+
+  max-width: 680px;
+
+  margin-bottom: 50px;
+
+}
+
+
+.tl-section-heading h2 {
+
+  margin:
+    18px 0;
+
+  font-size:
+    clamp(48px, 5vw, 70px);
+
+  line-height: .98;
+
+  letter-spacing: -.06em;
+
+}
+
+
+.tl-section-heading p {
+
+  color: #71847f;
+
+  font-size: 15px;
+
+  line-height: 1.7;
+
+}
+
+
+.tl-plan-grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 18px;
+
+  max-width: 900px;
+
+  margin: auto;
+
+}
+
+
+.tl-plan {
+
+  position: relative;
+
+  min-height: 530px;
+
+  padding: 35px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  background:
+    rgba(255,255,255,.65);
+
+  border:
+    1px solid
+    rgba(23,51,48,.1);
+
+  border-radius: 30px;
+
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease;
+
+}
+
+
+.tl-plan:hover {
+
+  transform: translateY(-7px);
+
+  box-shadow:
+    0 25px 55px
+    rgba(23,51,48,.1);
+
+}
+
+
+.tl-plan-featured {
+
+  background: var(--tl-mint);
+
+  border-color: transparent;
+
+}
+
+
+.tl-popular {
+
+  position: absolute;
+
+  top: 20px;
+  right: 20px;
+
+  padding:
+    7px 11px;
+
+  background:
+    var(--tl-orange);
+
+  border-radius: 999px;
+
+  color: #49321f;
+
+  font-size: 8px;
+
+  font-weight: 900;
+
+  letter-spacing: .1em;
+
+}
+
+
+.tl-plan-number {
+
+  color: #91a39e;
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+}
+
+
+.tl-plan-type {
+
+  margin-top: 50px;
+
+  color: var(--tl-green);
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+  letter-spacing: .13em;
+
+}
+
+
+.tl-plan h3 {
+
+  margin:
+    14px 0 10px;
+
+  font-size: 29px;
+
+  letter-spacing: -.04em;
+
+}
+
+
+.tl-plan > p {
+
+  color: #70847e;
+
+  font-size: 13px;
+
+  line-height: 1.7;
+
+}
+
+
+.tl-price {
+
+  margin-top: auto;
+
+  font-size: 68px;
+
+  line-height: 1;
+
+  font-weight: 750;
+
+  letter-spacing: -.06em;
+
+}
+
+
+.tl-price span {
+
+  position: relative;
+
+  top: -25px;
+
+  font-size: 20px;
+
+}
+
+
+.tl-plan-details {
+
+  margin:
+    18px 0 25px;
+
+  display: grid;
+
+  gap: 8px;
+
+  color: #71847f;
+
+  font-size: 11px;
+
+}
+
+
+.tl-plan-details div {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+}
+
+
+.tl-plan-details span {
+
+  color: var(--tl-green);
+
+  font-weight: 900;
+
+}
+
+
+.tl-plan-button {
+
+  width: 100%;
+
+  min-height: 54px;
+
+  padding:
+    0 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  border:
+    1px solid
+    rgba(23,51,48,.15);
+
+  border-radius: 999px;
+
+  background: transparent;
+
+  color: var(--tl-ink);
+
+  font: inherit;
+
+  font-size: 12px;
+
+  font-weight: 900;
+
+  cursor: pointer;
+
+  transition:
+    .25s ease;
+
+}
+
+
+.tl-plan-button:hover {
+
+  background: var(--tl-ink);
+
+  color: white;
+
+}
+
+
+.tl-plan-button-dark {
+
+  background: var(--tl-ink);
+
+  color: white;
+
+  border-color:
+    var(--tl-ink);
+
+}
+
+
+.tl-plan-button-dark:hover {
+
+  background:
+    var(--tl-green);
+
+}
+
+
+
+/* =====================================================
+   HOW IT WORKS
+===================================================== */
+
+.tl-how {
+
+  max-width: 1200px;
+
+  margin: auto;
+
+  padding:
+    90px 40px 120px;
+
+}
+
+
+.tl-center {
+
+  margin-left: auto;
+  margin-right: auto;
+
+  text-align: center;
+
+}
+
+
+.tl-center .tl-label {
+
+  justify-content: center;
+
+}
+
+
+.tl-steps {
+
+  margin-top: 55px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  border-top:
+    1px solid
+    rgba(23,51,48,.1);
+
+}
+
+
+.tl-step {
+
+  padding: 30px;
+
+  display: flex;
+
+  gap: 25px;
+
+  border-right:
+    1px solid
+    rgba(23,51,48,.1);
+
+}
+
+
+.tl-step:last-child {
+
+  border-right: 0;
+
+}
+
+
+.tl-step > span {
+
+  color: var(--tl-orange);
+
+  font-size: 10px;
+
+  font-weight: 900;
+
+}
+
+
+.tl-step h3 {
+
+  margin: 0 0 9px;
+
+  font-size: 19px;
+
+}
+
+
+.tl-step p {
+
+  margin: 0;
+
+  color: #71847f;
+
+  font-size: 12px;
+
+  line-height: 1.7;
+
+}
+
+
+
+/* =====================================================
+   FINAL CTA
+===================================================== */
+
+.tl-final {
+
+  min-height: 580px;
+
+  padding:
+    100px 20px;
+
+  display: grid;
+
+  place-items: center;
+
+  background:
+    var(--tl-ink);
+
+  color: white;
+
+  text-align: center;
+
+}
+
+
+.tl-final-inner {
+
+  max-width: 900px;
+
+}
+
+
+.tl-label-light {
+
+  justify-content: center;
+
+  color: #a7c1b9;
+
+}
+
+
+.tl-final h2 {
+
+  margin:
+    25px auto;
+
+  font-size:
+    clamp(46px, 6vw, 78px);
+
+  line-height: .98;
+
+  letter-spacing: -.06em;
+
+}
+
+
+.tl-final h2 i {
+
+  color: #b9d4c9;
+
+}
+
+
+.tl-final p {
+
+  margin-bottom: 32px;
+
+  color: #a5bbb5;
+
+  font-size: 16px;
+
+}
+
+
+.tl-btn-light {
+
+  background: white;
+
+  color: var(--tl-ink);
+
+}
+
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media screen and (max-width: 749px) {
+
+
+  .tl-hero {
+
+    min-height: auto;
+
+    padding:
+      65px 20px 55px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 45px;
+
+  }
+
+
+  .tl-hero h1 {
+
+    font-size:
+      clamp(50px, 14vw, 70px);
+
+  }
+
+
+  .tl-hero-text {
+
+    font-size: 16px;
+
+  }
+
+
+  .tl-hero-buttons {
+
+    flex-direction: column;
+
+  }
+
+
+  .tl-btn {
+
+    width: 100%;
+
+  }
+
+
+  .tl-hero-visual {
+
+    min-height: 380px;
+
+  }
+
+
+  .tl-circle-one {
+
+    width: 320px;
+    height: 320px;
+
+  }
+
+
+  .tl-circle-two {
+
+    width: 250px;
+    height: 250px;
+
+  }
+
+
+  .tl-therapy-card {
+
+    width: 88%;
+
+    padding: 20px;
+
+    border-radius: 24px;
+
+  }
+
+
+  .tl-floating-one {
+
+    left: -2px;
+
+    bottom: 20px;
+
+  }
+
+
+  .tl-floating-two {
+
+    right: -2px;
+
+    top: 15px;
+
+  }
+
+
+  /* BENEFITS */
+
+  .tl-benefits {
+
+    display: flex;
+
+    overflow-x: auto;
+
+    gap: 10px;
+
+    padding:
+      25px 20px 55px;
+
+    scroll-snap-type:
+      x mandatory;
+
+  }
+
+
+  .tl-benefit {
+
+    min-width: 78vw;
+
+    padding: 25px;
+
+    background: white;
+
+    border-radius: 22px;
+
+    scroll-snap-align: start;
+
+  }
+
+
+  /* PLANS */
+
+  .tl-plans {
+
+    padding:
+      75px 20px;
+
+  }
+
+
+  .tl-section-heading h2 {
+
+    font-size: 48px;
+
+  }
+
+
+  .tl-plan-grid {
+
+    display: flex;
+
+    overflow-x: auto;
+
+    gap: 12px;
+
+    margin-right: -20px;
+
+    padding-right: 20px;
+
+    scroll-snap-type:
+      x mandatory;
+
+  }
+
+
+  .tl-plan {
+
+    flex:
+      0 0 84vw;
+
+    min-height: 500px;
+
+    padding: 28px;
+
+    scroll-snap-align: start;
+
+  }
+
+
+  /* HOW */
+
+  .tl-how {
+
+    padding:
+      70px 20px 90px;
+
+  }
+
+
+  .tl-steps {
+
+    display: block;
+
+    margin-top: 35px;
+
+  }
+
+
+  .tl-step {
+
+    padding:
+      25px 0;
+
+    border-right: 0;
+
+    border-bottom:
+      1px solid
+      rgba(23,51,48,.1);
+
+  }
+
+
+  .tl-step:last-child {
+
+    border-bottom: 0;
+
+  }
+
+
+  /* FINAL */
+
+  .tl-final {
+
+    min-height: 550px;
+
+    padding:
+      80px 20px;
+
+  }
+
+
+  .tl-final h2 {
+
+    font-size: 48px;
+
+  }
+
+}
+
+
+
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .tl-therapy-card {
+
+    animation: none;
+
+  }
+
+}
+
+</style>
+
+
+
+{% schema %}
+
+{
+  "name": "Therapy Lane Home",
+
+  "settings": [
+
+    {
+      "type": "product",
+      "id": "standard_product",
+      "label": "Standard Therapist"
+    },
+
+    {
+      "type": "product",
+      "id": "experienced_product",
+      "label": "Highly Experienced Therapist"
+    }
+
+  ],
+
+  "presets": [
+
+    {
+      "name": "Therapy Lane Home"
+    }
+
+  ]
+
+}
+
+{% endschema %}
